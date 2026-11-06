@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encodage des données — calculateur énergie</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --brand:#0085a0; --brand-dark:#00697F; --brand-soft:#F2F7F8;
+  --ink:#141414; --muted:#5B6670; --line:#DCE3E6; --line-soft:#ECF1F2;
+  --warn:#B5531A; --warn-soft:#FDF6F2; --ok:#1F6F43; --ok-soft:#F0F7F3;
+}
+*{box-sizing:border-box}
+body{margin:0; background:#fff; color:var(--ink); font-size:16px; line-height:1.5;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1180px; margin:0 auto; padding:0 16px 72px}
+h1,h2{margin:0; line-height:1.25; letter-spacing:-0.01em}
+h1{font-size:clamp(21px,3.5vw,30px); font-weight:700}
+h2{font-size:17px; font-weight:700}
+p{margin:0}
+header{border-bottom:1px solid var(--line)}
+.head-in{max-width:1180px; margin:0 auto; padding:20px 16px}
+.eyebrow{font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--brand-dark)}
+.lede{margin-top:6px; color:var(--muted); font-size:15px; max-width:70ch}
+
+.card{border:1px solid var(--line); border-radius:8px; padding:20px; margin-top:20px}
+.step{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.num{display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; flex:none;
+     border-radius:50%; background:var(--brand); color:#fff; font-size:13px; font-weight:700}
+.hint{font-size:13.5px; color:var(--muted); margin-top:8px}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:14px}
+
+.btn{min-height:44px; padding:0 20px; border-radius:6px; border:1px solid var(--line); background:#fff;
+     color:var(--ink); font:inherit; font-size:14.5px; font-weight:600; cursor:pointer; text-decoration:none;
+     display:inline-flex; align-items:center}
+.btn:hover{border-color:var(--brand)}
+.btn-main{background:var(--brand); border-color:var(--brand); color:#fff}
+.btn-main:hover{background:var(--brand-dark); border-color:var(--brand-dark)}
+.btn-main[disabled]{background:#9FB4BA; border-color:#9FB4BA; cursor:not-allowed}
+.btn-sm{min-height:38px; padding:0 14px; font-size:13.5px}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--brand-dark); outline-offset:2px}
+
+.msg{margin-top:14px; padding:12px 16px; border-radius:6px; font-size:14px; line-height:1.55}
+.msg-warn{background:var(--warn-soft); border:1px solid var(--warn)}
+.msg-info{background:var(--brand-soft); border:1px solid var(--line)}
+.msg-ok{background:var(--ok-soft); border:1px solid var(--ok)}
+.msg ul{margin:8px 0 0; padding-left:20px}
+.msg li{margin-top:3px}
+[hidden]{display:none !important}
+
+.drop{margin-top:14px; padding:28px 20px; border:2px dashed var(--line); border-radius:8px; text-align:center;
+      background:#fff; cursor:pointer}
+.drop.over{border-color:var(--brand); background:var(--brand-soft)}
+.drop strong{display:block; font-size:15px}
+.drop span{font-size:13px; color:var(--muted)}
+
+.tablebox{margin-top:14px; max-height:62vh; overflow:auto; border:1px solid var(--line); border-radius:8px}
+table{width:100%; border-collapse:separate; border-spacing:0; font-size:13.5px}
+th,td{padding:0; text-align:left}
+thead th{position:sticky; top:0; z-index:1; background:var(--brand); color:#fff; padding:9px 10px;
+         font-size:12px; font-weight:600; white-space:nowrap}
+thead th:first-child{left:0; z-index:2}
+tbody td{border-bottom:1px solid var(--line-soft)}
+tbody td:first-child{position:sticky; left:0; background:#fff; border-right:1px solid var(--line);
+  padding:0 10px; font-variant-numeric:tabular-nums; white-space:nowrap}
+tbody tr:nth-child(even) td:first-child{background:#F7FAFB}
+tbody tr:nth-child(even){background:#F7FAFB}
+tbody input{width:100%; min-width:88px; height:34px; padding:0 8px; border:0; background:transparent;
+  font:inherit; font-size:13.5px; text-align:right; font-variant-numeric:tabular-nums; color:var(--ink)}
+tbody input:focus{background:#fff; outline:2px solid var(--brand); outline-offset:-2px}
+tbody input.bad{background:var(--warn-soft); color:var(--warn); font-weight:600}
+td.flag{box-shadow:inset 3px 0 0 var(--warn)}
+
+.stats{display:flex; gap:22px; flex-wrap:wrap; margin-top:12px; font-size:13.5px; color:var(--muted)}
+.stats b{color:var(--ink)}
+.sticky-save{position:sticky; bottom:0; margin-top:18px; padding:14px 0; background:#fff;
+  border-top:1px solid var(--line); display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+code{background:var(--brand-soft); padding:1px 5px; border-radius:3px; font-size:13px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-in">
+    <div class="eyebrow">Administration</div>
+    <h1>Encodage des données</h1>
+    <p class="lede">Met à jour les prix lus par le calculateur public. Chargez le classeur Excel, vérifiez ce qui a été lu, puis téléchargez le fichier de données à déposer en ligne.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <noscript><p class="msg msg-warn" style="margin-top:20px">Cette page nécessite JavaScript.</p></noscript>
+
+  <div class="msg msg-info" style="margin-top:20px">
+    <strong>Cette page n'enregistre rien en ligne.</strong> Tout se passe dans votre navigateur : aucune donnée n'est envoyée nulle part.
+    Pour que le calculateur public voie vos modifications, il faut déposer le fichier <code>donnees.json</code> produit à l'étape 3 dans le dépôt GitHub du site.
+  </div>
+
+  <section class="card">
+    <div class="step"><span class="num">1</span><h2>Charger le classeur</h2></div>
+    <p class="hint">Format attendu : une ligne par mois, les colonnes du modèle, dans l'ordre. Le fichier <code>.xlsx</code> est lu directement — inutile de passer par un CSV.</p>
+    <div class="row">
+      <a class="btn btn-sm" href="../Modele-donnees-energie.xlsx" download>Télécharger le modèle Excel</a>
+      <button type="button" class="btn btn-sm" id="load-live">Repartir des données en ligne</button>
+    </div>
+    <div class="drop" id="drop" role="button" tabindex="0" aria-label="Choisir un fichier Excel">
+      <strong>Déposez le fichier .xlsx ici</strong>
+      <span>ou cliquez pour le choisir</span>
+      <input type="file" id="file" accept=".xlsx,.xlsm,.xls" hidden>
+    </div>
+    <div id="read-msg"></div>
+  </section>
+
+  <section class="card" id="step2" hidden>
+    <div class="step"><span class="num">2</span><h2>Vérifier et corriger</h2></div>
+    <p class="hint">Les cellules sont modifiables. Une valeur vide est permise : le calculateur l'ignorera et signalera le mois comme non couvert. Les contrôles ci-dessous sont des signalements, pas des blocages.</p>
+    <div id="checks"></div>
+    <div class="stats" id="stats"></div>
+    <div class="tablebox"><table id="grid"></table></div>
+    <div class="row">
+      <button type="button" class="btn btn-sm" id="add-row">Ajouter le mois suivant</button>
+      <button type="button" class="btn btn-sm" id="recheck">Relancer les contrôles</button>
+    </div>
+  </section>
+
+  <section class="card" id="step3" hidden>
+    <div class="step"><span class="num">3</span><h2>Produire le fichier de données</h2></div>
+    <p class="hint">Téléchargez <code>donnees.json</code>, puis déposez-le dans le dépôt GitHub du site, à la racine, en remplaçant l'ancien. Le calculateur l'utilise dès le rafraîchissement suivant.</p>
+    <div class="sticky-save">
+      <button type="button" class="btn btn-main" id="save">Télécharger donnees.json</button>
+      <button type="button" class="btn" id="save-xlsx">Télécharger le classeur corrigé</button>
+      <span class="hint" style="margin:0" id="save-info"></span>
+    </div>
+  </section>
+
+</div>
+
+<script src="vendor/xlsx-lite.js"></script>
+<script>
+"use strict";
+
+const KEYS = ["mazout","elec_comm","elec_social","elec_jour","elec_nuit","gaz_comm","gaz_social"];
+const HEAD = ["Mois","Mazout (€ / 1 545 L)","Élec. commercial","Élec. social mono","Élec. social jour",
+              "Élec. social nuit","Gaz commercial","Gaz social"];
+const DEC  = {mazout:2, elec_comm:4, elec_social:4, elec_jour:4, elec_nuit:4, gaz_comm:4, gaz_social:4};
+const $ = s => document.querySelector(s);
+let ROWS = [];
+
+/* ---------- utilitaires ---------- */
+function pad(n){ return String(n).padStart(2,"0"); }
+function toMonth(v){
+  if(v instanceof Date && !isNaN(v)) return v.getFullYear() + "-" + pad(v.getMonth()+1);
+  if(typeof v === "number" && v > 20000 && v < 80000){
+    const d = new Date(Date.UTC(1899,11,30) + v*86400000);
+    return d.getUTCFullYear() + "-" + pad(d.getUTCMonth()+1);
+  }
+  const s = String(v == null ? "" : v).trim();
+  let m = s.match(/^(\d{4})[-\/.](\d{1,2})(?:[-\/.]\d{1,2})?$/);
+  if(m) return m[1] + "-" + pad(+m[2]);
+  m = s.match(/^(\d{1,2})[-\/.](\d{4})$/);
+  if(m) return m[2] + "-" + pad(+m[1]);
+  m = s.match(/^\d{1,2}[-\/.](\d{1,2})[-\/.](\d{4})$/);
+  if(m) return m[2] + "-" + pad(+m[1]);
+  return null;
+}
+function toNum(v){
+  if(v === null || v === undefined || v === "") return null;
+  if(typeof v === "number") return isFinite(v) ? v : null;
+  const c = String(v).replace(/[\s  ']/g,"").replace(",",".");
+  if(c === "" || c === "—" || c === "-") return null;
+  const n = Number(c);
+  return isFinite(n) ? n : null;
+}
+function addMonth(ym, k){
+  const [y,m] = ym.split("-").map(Number);
+  const z = y*12 + (m-1) + k;
+  return String(Math.floor(z/12)) + "-" + pad(z%12 + 1);
+}
+function monthsBetween(a,b){
+  const [y1,m1]=a.split("-").map(Number), [y2,m2]=b.split("-").map(Number);
+  return (y2*12+m2)-(y1*12+m1);
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function msg(el, kind, html){ el.innerHTML = '<div class="msg msg-'+kind+'">'+html+'</div>'; }
+function download(blob, name){
+  const u = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 2000);
+}
+
+/* ---------- lecture du classeur ---------- */
+function rowsFromSheet(aoa){
+  let start = 0;
+  for(let i = 0; i < Math.min(aoa.length, 30); i++){
+    const c = String(aoa[i] && aoa[i][0] != null ? aoa[i][0] : "").trim().toLowerCase();
+    if(c === "mois" || c === "maand"){ start = i + 1; break; }
+  }
+  const out = [], skipped = [];
+  for(let i = start; i < aoa.length; i++){
+    const r = aoa[i] || [];
+    const ym = toMonth(r[0]);
+    if(!ym){
+      /* on ne signale que les lignes qui portent des chiffres : les lignes
+         de sous-titres ou de commentaires sont ignorées sans bruit */
+      if(r.slice(1).some(c => toNum(c) !== null)) skipped.push(i+1);
+      continue;
+    }
+    const rec = {mois: ym};
+    KEYS.forEach((k, j) => { rec[k] = toNum(r[j+1]); });
+    out.push(rec);
+  }
+  out.sort((a,b) => a.mois < b.mois ? -1 : a.mois > b.mois ? 1 : 0);
+  return {rows: out, skipped};
+}
+
+/* ---------- contrôles ---------- */
+function runChecks(){
+  const notes = [], seen = new Map();
+  ROWS.forEach(r => seen.set(r.mois, (seen.get(r.mois) || 0) + 1));
+  const dup = [...seen].filter(([,n]) => n > 1).map(([m]) => m);
+  if(dup.length) notes.push({lvl:"warn", txt:"Mois en double : " + dup.join(", ") + ". Le dernier l'emportera."});
+
+  const gaps = [];
+  for(let i = 1; i < ROWS.length; i++){
+    const d = monthsBetween(ROWS[i-1].mois, ROWS[i].mois);
+    if(d > 1) for(let k = 1; k < d; k++) gaps.push(addMonth(ROWS[i-1].mois, k));
+  }
+  if(gaps.length) notes.push({lvl:"warn", txt:"Mois absents de la liste : " + gaps.slice(0,12).join(", ")
+    + (gaps.length > 12 ? " … (" + gaps.length + " au total)" : "") + "."});
+
+  const flags = new Set();
+  ROWS.forEach(r => {
+    const mo = r.elec_social, j = r.elec_jour, n = r.elec_nuit;
+    if(mo == null || j == null || n == null) return;
+    if(mo === j && j === n){
+      flags.add(r.mois + "|elec_jour");
+      flags.add(r.mois + "|elec_nuit");
+    }else if(!(n <= mo && mo <= j)){
+      flags.add(r.mois + "|elec_social");
+    }
+  });
+  const trio = ROWS.filter(r => r.elec_social != null && r.elec_social === r.elec_jour && r.elec_jour === r.elec_nuit);
+  if(trio.length) notes.push({lvl:"warn", txt:"Tarif social jour = nuit = mono (bi-horaire probablement recopié) : "
+    + trio.map(r => r.mois).join(", ") + "."});
+  const inc = ROWS.filter(r => r.elec_social != null && r.elec_jour != null && r.elec_nuit != null
+    && !(r.elec_nuit <= r.elec_social && r.elec_social <= r.elec_jour)
+    && !(r.elec_social === r.elec_jour && r.elec_jour === r.elec_nuit));
+  if(inc.length) notes.push({lvl:"warn", txt:"Tarif social mono hors de l'intervalle nuit–jour : "
+    + inc.map(r => r.mois).join(", ") + "."});
+
+  KEYS.forEach(k => {
+    let prev = null, pm = null; const jumps = [];
+    ROWS.forEach(r => {
+      const v = r[k];
+      if(v != null && prev != null && prev !== 0 && Math.abs((v - prev)/prev) > 0.30){
+        jumps.push(pm + "→" + r.mois);
+        flags.add(r.mois + "|" + k);
+      }
+      if(v != null){ prev = v; pm = r.mois; }
+    });
+    if(jumps.length) notes.push({lvl:"warn", txt:"Variation de plus de 30 % — " + HEAD[KEYS.indexOf(k)+1]
+      + " : " + jumps.join(", ") + "."});
+  });
+
+  const box = $("#checks");
+  if(!notes.length){
+    msg(box, "ok", "<strong>Aucune anomalie détectée.</strong>");
+  }else{
+    box.innerHTML = '<div class="msg msg-warn"><strong>' + notes.length
+      + ' point' + (notes.length > 1 ? "s" : "") + ' à vérifier</strong> — ce sont des signalements, vous pouvez les ignorer.<ul>'
+      + notes.map(n => "<li>" + esc(n.txt) + "</li>").join("") + "</ul></div>";
+  }
+
+  const filled = {}; KEYS.forEach(k => filled[k] = ROWS.filter(r => r[k] != null).length);
+  $("#stats").innerHTML = "<span><b>" + ROWS.length + "</b> mois</span>"
+    + (ROWS.length ? "<span>de <b>" + ROWS[0].mois + "</b> à <b>" + ROWS[ROWS.length-1].mois + "</b></span>" : "")
+    + KEYS.map(k => "<span>" + esc(HEAD[KEYS.indexOf(k)+1]) + " : <b>" + filled[k] + "</b></span>").join("");
+
+  document.querySelectorAll("#grid td.flag").forEach(td => td.classList.remove("flag"));
+  flags.forEach(f => {
+    const [m,k] = f.split("|");
+    const td = document.querySelector('#grid td[data-m="' + m + '"][data-k="' + k + '"]');
+    if(td) td.classList.add("flag");
+  });
+}
+
+/* ---------- tableau ---------- */
+function renderGrid(){
+  $("#grid").innerHTML =
+    "<thead><tr>" + HEAD.map(h => "<th>" + esc(h) + "</th>").join("") + "</tr></thead><tbody>"
+    + ROWS.map(r => "<tr><td>" + esc(r.mois) + "</td>"
+        + KEYS.map(k => '<td data-m="' + r.mois + '" data-k="' + k + '"><input inputmode="decimal" value="'
+            + (r[k] == null ? "" : String(r[k]).replace(".", ",")) + '" aria-label="'
+            + esc(HEAD[KEYS.indexOf(k)+1] + " " + r.mois) + '"></td>').join("")
+        + "</tr>").join("")
+    + "</tbody>";
+
+  $("#grid").addEventListener("input", ev => {
+    const inp = ev.target; if(inp.tagName !== "INPUT") return;
+    const td = inp.closest("td"), m = td.dataset.m, k = td.dataset.k;
+    const raw = inp.value.trim();
+    const v = raw === "" ? null : toNum(raw);
+    inp.classList.toggle("bad", raw !== "" && v === null);
+    const row = ROWS.find(r => r.mois === m);
+    if(row && !(raw !== "" && v === null)) row[k] = v;
+  });
+  $("#step2").hidden = false;
+  $("#step3").hidden = false;
+  $("#save-info").textContent = "Dernière lecture : " + new Date().toLocaleString("fr-BE");
+}
+
+/* ---------- entrées ---------- */
+function ingest(rows, skipped, origin){
+  ROWS = rows;
+  if(!ROWS.length){
+    msg($("#read-msg"), "warn", "<strong>Aucune ligne lue.</strong> Vérifiez que la première colonne contient les mois et qu'une cellule « Mois » précède les données.");
+    $("#step2").hidden = true; $("#step3").hidden = true;
+    return;
+  }
+  msg($("#read-msg"), "ok", "<strong>" + ROWS.length + " mois lus</strong> depuis " + esc(origin)
+    + " (" + ROWS[0].mois + " → " + ROWS[ROWS.length-1].mois + ")."
+    + (skipped && skipped.length ? " " + skipped.length + " ligne(s) ignorée(s) : aucun mois reconnu." : ""));
+  renderGrid();
+  runChecks();
+}
+async function handleFile(f){
+  if(!f) return;
+  try{
+    const buf = await f.arrayBuffer();
+    const aoa = await XlsxLite.readXlsx(buf);
+    const {rows, skipped} = rowsFromSheet(aoa);
+    ingest(rows, skipped, f.name);
+  }catch(e){
+    msg($("#read-msg"), "warn", "<strong>Lecture impossible.</strong> " + esc(e.message || e));
+  }
+}
+
+/* ---------- sorties ---------- */
+function buildJson(){
+  const seen = new Map();
+  ROWS.forEach(r => seen.set(r.mois, r));
+  const mois = [...seen.values()].sort((a,b) => a.mois < b.mois ? -1 : 1)
+    .map(r => { const o = {mois: r.mois}; KEYS.forEach(k => o[k] = (r[k] == null ? null : r[k])); return o; });
+  return {
+    version: 1,
+    miseAJour: new Date().toISOString().slice(0,10),
+    region: "Bruxelles",
+    source: "CREG",
+    references: {elec:"3 500 kWh/an", gaz:"23 260 kWh/an", mazout:"1 545 L"},
+    unites: {elec:"c€/kWh", gaz:"c€/kWh", mazout:"€ pour 1 545 L"},
+    mois: mois
+  };
+}
+function saveJson(){
+  download(new Blob([JSON.stringify(buildJson(), null, 1)], {type:"application/json;charset=utf-8"}), "donnees.json");
+}
+async function saveXlsx(){
+  const aoa = [HEAD].concat(ROWS.map(r => [r.mois].concat(KEYS.map(k => r[k]))));
+  try{
+    const blob = await XlsxLite.writeXlsx(aoa, "Donnees");
+    download(blob, "Donnees-energie-" + new Date().toISOString().slice(0,10) + ".xlsx");
+  }catch(e){
+    msg($("#read-msg"), "warn", "<strong>Écriture impossible.</strong> " + esc(e.message || e));
+  }
+}
+
+/* ---------- branchements ---------- */
+const drop = $("#drop"), file = $("#file");
+drop.addEventListener("click", () => file.click());
+drop.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); file.click(); } });
+file.addEventListener("change", () => handleFile(file.files[0]));
+["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => {
+  e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => {
+  e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => handleFile(e.dataTransfer.files[0]));
+
+$("#load-live").addEventListener("click", async () => {
+  try{
+    const r = await fetch("../donnees.json", {cache:"no-store"});
+    if(!r.ok) throw new Error("fichier introuvable (" + r.status + ")");
+    const d = await r.json();
+    ingest(d.mois.map(m => {
+      const o = {mois: m.mois}; KEYS.forEach(k => o[k] = (m[k] == null ? null : m[k])); return o;
+    }), [], "les données en ligne (mise à jour du " + d.miseAJour + ")");
+  }catch(e){
+    msg($("#read-msg"), "warn", "<strong>Impossible de charger les données en ligne.</strong> " + esc(e.message || e)
+      + " — chargez le classeur Excel à la place.");
+  }
+});
+
+$("#add-row").addEventListener("click", () => {
+  const last = ROWS.length ? ROWS[ROWS.length-1].mois : new Date().toISOString().slice(0,7);
+  const next = ROWS.length ? addMonth(last, 1) : last;
+  const rec = {mois: next}; KEYS.forEach(k => rec[k] = null);
+  ROWS.push(rec);
+  renderGrid(); runChecks();
+  const el = document.querySelector('#grid td[data-m="' + next + '"] input');
+  if(el){ el.focus(); el.scrollIntoView({block:"center"}); }
+});
+$("#recheck").addEventListener("click", runChecks);
+$("#save").addEventListener("click", saveJson);
+$("#save-xlsx").addEventListener("click", saveXlsx);
+</script>
+</body>
+</html>

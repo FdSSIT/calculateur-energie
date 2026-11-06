@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculateur de prix de l'énergie</title>
+<meta name="description" content="Prix moyens de l'électricité, du gaz et du mazout à Bruxelles — moyennes de période, tarif social et estimation de montants.">
+<style>
+:root{
+  --brand:#0085a0; --brand-dark:#00697F; --brand-soft:#F2F7F8;
+  --ink:#141414; --muted:#5B6670; --line:#DCE3E6; --line-soft:#ECF1F2;
+  --warn:#B5531A; --warn-soft:#FDF6F2;
+  --radius:8px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:#fff; color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px; line-height:1.5;
+}
+.wrap{max-width:1040px; margin:0 auto; padding:0 16px 64px}
+h1,h2,h3{margin:0; line-height:1.25; letter-spacing:-0.01em}
+h1{font-size:clamp(22px,4vw,32px); font-weight:700}
+h2{font-size:17px; font-weight:700}
+p{margin:0}
+button{font:inherit}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ---------- en-tête ---------- */
+header{border-bottom:1px solid var(--line); background:#fff}
+.head-in{max-width:1040px; margin:0 auto; padding:20px 16px; display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap}
+.head-txt{flex:1 1 320px; min-width:0}
+.eyebrow{font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--brand-dark)}
+.lede{margin-top:6px; color:var(--muted); font-size:15px; max-width:62ch}
+.langs{display:flex; gap:0; border:1px solid var(--line); border-radius:6px; overflow:hidden}
+.langs button{min-height:40px; padding:0 14px; border:0; background:#fff; color:var(--muted); font-size:14px; font-weight:600; cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--brand); color:#fff}
+
+/* ---------- blocs ---------- */
+.card{border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-top:20px; background:#fff}
+.step{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.num{display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; flex:none;
+     border-radius:50%; background:var(--brand); color:#fff; font-size:13px; font-weight:700}
+.hint{font-size:13.5px; color:var(--muted); margin:8px 0 0 34px}
+.body{margin:12px 0 0 34px}
+@media (max-width:560px){ .hint,.body{margin-left:0} }
+
+/* ---------- contrôles ---------- */
+.pills{display:flex; gap:10px; flex-wrap:wrap}
+.pill{display:flex; align-items:center; gap:9px; min-height:46px; padding:0 18px; border:1px solid var(--line);
+      border-radius:6px; background:#fff; font-size:15px; cursor:pointer}
+.pill:has(input:checked){border:2px solid var(--brand); background:var(--brand-soft); font-weight:600}
+.pill:focus-within{outline:2px solid var(--brand-dark); outline-offset:2px}
+input[type=radio],input[type=checkbox]{accent-color:var(--brand); width:18px; height:18px; margin:0; flex:none}
+
+.serielist{border:1px solid var(--line); border-radius:var(--radius); overflow:hidden}
+.serie{display:flex; align-items:center; gap:12px; min-height:48px; padding:8px 14px; border-bottom:1px solid var(--line-soft); cursor:pointer; font-size:15px}
+.serie:last-child{border-bottom:0}
+.serie:has(input:checked){background:var(--brand-soft); font-weight:600}
+.serie:focus-within{outline:2px solid var(--brand-dark); outline-offset:-2px}
+.swatch{width:24px; height:0; flex:none; border-top-width:3px; border-top-style:solid; border-radius:2px}
+.serie .u{margin-left:auto; font-size:13px; font-weight:400; color:var(--muted); white-space:nowrap}
+
+.fields{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end}
+.field{display:flex; flex-direction:column; gap:5px; font-size:13px; font-weight:600}
+.field .lbl-sub{font-weight:400; color:var(--muted)}
+input[type=month],input[type=text]{min-height:44px; padding:0 10px; border:1px solid var(--line); border-radius:5px;
+  background:#fff; font:inherit; font-size:15px; color:var(--ink); max-width:100%}
+input[type=text]{width:130px}
+input:focus-visible,button:focus-visible{outline:2px solid var(--brand-dark); outline-offset:2px}
+.unit{font-size:14px; font-weight:400; color:var(--muted)}
+.inline{display:flex; align-items:center; gap:8px}
+
+.optional{border:1px dashed var(--warn); background:var(--warn-soft)}
+.optional .num{background:var(--warn)}
+
+.actions{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:22px}
+.btn{min-height:46px; padding:0 24px; border-radius:6px; border:1px solid var(--line); background:#fff; color:var(--ink);
+     font-size:15px; font-weight:600; cursor:pointer}
+.btn-main{background:var(--brand); border-color:var(--brand); color:#fff; padding:0 30px}
+.btn-main:hover{background:var(--brand-dark); border-color:var(--brand-dark)}
+.btn:hover{border-color:var(--brand)}
+.btn-sm{min-height:40px; padding:0 14px; font-size:13.5px}
+
+/* ---------- messages ---------- */
+.msg{margin-top:16px; padding:12px 16px; border-radius:6px; font-size:14px; line-height:1.5}
+.msg-warn{background:var(--warn-soft); border:1px solid var(--warn); color:var(--ink)}
+.msg-info{background:var(--brand-soft); border:1px solid var(--line); color:var(--ink)}
+[hidden]{display:none !important}
+
+/* ---------- résultats ---------- */
+.params{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 16px; border-radius:6px;
+        background:var(--brand-soft); font-size:14px; margin-top:28px}
+.params .ok{margin-left:auto; font-weight:600; color:var(--brand-dark)}
+.params .ko{margin-left:auto; font-weight:600; color:var(--warn)}
+.block{margin-top:26px}
+.block > .hint{margin-left:0}
+table{width:100%; border-collapse:collapse; font-size:14.5px}
+th,td{padding:8px 12px; text-align:left}
+thead th{background:var(--brand-soft); font-size:13px; font-weight:600; border-bottom:1px solid var(--line)}
+tbody tr{border-bottom:1px solid var(--line-soft)}
+tbody tr:last-child{border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right}
+tr.on{font-weight:700}
+tr.off td{color:var(--muted)}
+tr.tot{background:var(--brand-soft); font-weight:700; border-bottom:0}
+.dot{display:inline-block; width:11px; height:11px; border-radius:50%; vertical-align:-1px}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-top:12px}
+.stat{border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
+.stat b{display:block; font-size:12.5px; font-weight:400; color:var(--muted)}
+.stat span{display:block; margin-top:5px; font-size:23px; font-weight:700}
+.stat.key{border:2px solid var(--brand); background:var(--brand-soft)}
+
+.legend{display:flex; gap:20px; flex-wrap:wrap; font-size:13px; margin:10px 0}
+.legend span{display:flex; align-items:center; gap:8px}
+.chartbox{position:relative; border:1px solid var(--line); border-radius:var(--radius); padding:8px 4px 2px}
+.chartbox svg{display:block; width:100%; height:auto; touch-action:none}
+.tip{position:absolute; pointer-events:none; z-index:2; min-width:150px; padding:8px 10px; border:1px solid #C9D2D6;
+     border-radius:6px; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.10); font-size:13px; transform:translate(-50%,-115%)}
+.tip .m{color:var(--muted); font-size:11.5px}
+.tip .r{display:flex; align-items:center; gap:7px; margin-top:3px; white-space:nowrap}
+.tip .r b{margin-left:auto; font-variant-numeric:tabular-nums}
+
+.scroll{overflow-x:auto}
+.tools{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+footer.notes{margin-top:34px; padding-top:16px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted)}
+footer.notes p + p{margin-top:6px}
+
+@media print{
+  header .langs,.card,.actions,.tools,.nojs{display:none !important}
+  .wrap{max-width:none; padding:0}
+  .block{break-inside:avoid; margin-top:16px}
+  body{font-size:11pt}
+  .params{background:none; border:1px solid #999}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-in">
+    <div class="head-txt">
+      <div class="eyebrow" data-t="eyebrow"></div>
+      <h1 data-t="title"></h1>
+      <p class="lede" data-t="lede"></p>
+    </div>
+    <div class="langs" role="group" aria-label="Langue / Taal">
+      <button type="button" id="btn-fr" aria-pressed="true">FR</button>
+      <button type="button" id="btn-nl" aria-pressed="false">NL</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <noscript><p class="msg msg-warn" style="margin-top:20px">Ce calculateur nécessite JavaScript. / Deze rekentool vereist JavaScript.</p></noscript>
+
+  <form id="form" novalidate>
+
+    <section class="card">
+      <div class="step"><span class="num">1</span><h2 data-t="s1"></h2><span class="unit" data-t="s1sub"></span></div>
+      <p class="hint" data-t="s1hint"></p>
+      <div class="body pills" id="energies" role="radiogroup" aria-label="Énergie"></div>
+    </section>
+
+    <section class="card">
+      <div class="step"><span class="num">2</span><h2 data-t="s2"></h2><span class="unit" data-t="s2sub"></span></div>
+      <p class="hint" data-t="s2hint"></p>
+      <div class="body"><div class="serielist" id="series"></div></div>
+    </section>
+
+    <section class="card">
+      <div class="step"><span class="num">3</span><h2 data-t="s3"></h2></div>
+      <p class="hint" data-t="s3hint"></p>
+      <div class="body fields">
+        <label class="field"><span data-t="from"></span><input type="month" id="from"></label>
+        <label class="field"><span data-t="to"></span><input type="month" id="to"></label>
+      </div>
+    </section>
+
+    <section class="card optional">
+      <div class="step"><span class="num">4</span><h2 data-t="s4"></h2><span class="unit" data-t="s4sub"></span></div>
+      <p class="hint" data-t="s4hint"></p>
+      <div class="body fields">
+        <label class="field"><span data-t="conso"></span>
+          <span class="inline"><input type="text" id="conso" inputmode="decimal" autocomplete="off"><span class="unit" id="conso-unit"></span></span>
+        </label>
+        <label class="field"><span data-t="billed"></span>
+          <span class="inline"><input type="text" id="billed" inputmode="decimal" autocomplete="off" placeholder="—"><span class="unit">€</span></span>
+        </label>
+      </div>
+      <p class="hint" data-t="s4note"></p>
+    </section>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-main" data-t="calc"></button>
+      <button type="button" class="btn" id="reset" data-t="reset"></button>
+      <span class="unit" id="datainfo" style="margin-left:auto"></span>
+    </div>
+  </form>
+
+  <div id="error" class="msg msg-warn" hidden></div>
+
+  <main id="out" hidden aria-live="polite">
+
+    <div class="params">
+      <strong data-t="recap"></strong>
+      <span id="recap"></span>
+      <span id="cover"></span>
+    </div>
+
+    <section class="block">
+      <h2><span data-t="r1"></span></h2>
+      <p class="hint" data-t="r1hint"></p>
+      <div class="scroll"><table id="avg"><tbody></tbody></table></div>
+    </section>
+
+    <section class="block" id="chart-block">
+      <h2><span data-t="r2"></span></h2>
+      <div class="legend" id="legend"></div>
+      <div class="chartbox" id="chartbox">
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <p class="hint" data-t="r2hint"></p>
+    </section>
+
+    <section class="block" id="money-block" hidden>
+      <h2><span data-t="r3"></span></h2>
+      <p class="hint" id="money-hint"></p>
+      <div class="scroll"><table id="money"><tbody></tbody></table></div>
+      <div id="billed-out"></div>
+    </section>
+
+    <section class="block">
+      <h2><span data-t="r4"></span></h2>
+      <p class="hint" data-t="r4hint"></p>
+      <div class="scroll"><table id="detail"></table></div>
+      <div class="tools">
+        <button type="button" class="btn btn-sm" id="copy" data-t="copy"></button>
+        <button type="button" class="btn btn-sm" id="csv" data-t="csv"></button>
+        <button type="button" class="btn btn-sm" id="png" data-t="png"></button>
+        <button type="button" class="btn btn-sm" id="print" data-t="print"></button>
+      </div>
+    </section>
+
+    <footer class="notes">
+      <p data-t="n1"></p>
+      <p data-t="n2"></p>
+      <p data-t="n3"></p>
+    </footer>
+  </main>
+</div>
+
+<script>
+"use strict";
+
+/* ================= données de secours (si donnees.json n'est pas accessible) ========= */
+const FALLBACK = {"version":1,"miseAJour":"2026-11-03","region":"Bruxelles","source":"CREG","references":{"elec":"3 500 kWh/an","gaz":"23 260 kWh/an","mazout":"1 545 L"},"unites":{"elec":"c€/kWh","gaz":"c€/kWh","mazout":"€ pour 1 545 L"},"mois":[{"mois":"2019-01","mazout":1431.86,"elec_comm":27.26,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":6.24,"gaz_social":3.25},{"mois":"2019-02","mazout":1400.76,"elec_comm":27.24,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":6.17,"gaz_social":3.25},{"mois":"2019-03","mazout":1453.43,"elec_comm":27.21,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":6.15,"gaz_social":3.25},{"mois":"2019-04","mazout":1533.38,"elec_comm":22.9,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":5.63,"gaz_social":3.25},{"mois":"2019-05","mazout":1528.3,"elec_comm":22.92,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":5.54,"gaz_social":3.25},{"mois":"2019-06","mazout":1396.11,"elec_comm":22.91,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":5.58,"gaz_social":3.25},{"mois":"2019-07","mazout":1420.01,"elec_comm":21.91,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.39,"gaz_social":3.25},{"mois":"2019-08","mazout":1448.99,"elec_comm":22.02,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.39,"gaz_social":3.25},{"mois":"2019-09","mazout":1490.02,"elec_comm":22.01,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.39,"gaz_social":3.25},{"mois":"2019-10","mazout":1465.91,"elec_comm":23.33,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.57,"gaz_social":3.25},{"mois":"2019-11","mazout":1431.22,"elec_comm":23.35,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.57,"gaz_social":3.25},{"mois":"2019-12","mazout":1414.3,"elec_comm":23.35,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.57,"gaz_social":3.25},{"mois":"2020-01","mazout":1477.96,"elec_comm":23.25,"elec_social":17.99,"elec_jour":18.589,"elec_nuit":13.976,"gaz_comm":4.41,"gaz_social":2.59},{"mois":"2020-02","mazout":1320.39,"elec_comm":23.23,"elec_social":19.34,"elec_jour":20.129,"elec_nuit":15.473,"gaz_comm":4.4,"gaz_social":2.59},{"mois":"2020-03","mazout":996.8,"elec_comm":23.26,"elec_social":19.34,"elec_jour":20.129,"elec_nuit":15.473,"gaz_comm":4.34,"gaz_social":2.59},{"mois":"2020-04","mazout":844.31,"elec_comm":20.26,"elec_social":19.34,"elec_jour":20.129,"elec_nuit":15.473,"gaz_comm":3.82,"gaz_social":2.59},{"mois":"2020-05","mazout":765.42,"elec_comm":19.41,"elec_social":19.34,"elec_jour":20.129,"elec_nuit":15.473,"gaz_comm":3.67,"gaz_social":2.59},{"mois":"2020-06","mazout":910.3,"elec_comm":19.46,"elec_social":19.34,"elec_jour":20.129,"elec_nuit":15.473,"gaz_comm":3.54,"gaz_social":2.59},{"mois":"2020-07","mazout":989.4,"elec_comm":19.96,"elec_social":16.15,"elec_jour":16.271,"elec_nuit":13.213,"gaz_comm":3.44,"gaz_social":1.62},{"mois":"2020-08","mazout":964.65,"elec_comm":20.2,"elec_social":16.15,"elec_jour":16.271,"elec_nuit":13.213,"gaz_comm":3.43,"gaz_social":1.62},{"mois":"2020-09","mazout":893.8,"elec_comm":20.52,"elec_social":16.15,"elec_jour":16.271,"elec_nuit":13.213,"gaz_comm":3.61,"gaz_social":1.62},{"mois":"2020-10","mazout":918.33,"elec_comm":22.28,"elec_social":16.56,"elec_jour":16.781,"elec_nuit":13.562,"gaz_comm":4.22,"gaz_social":1.85},{"mois":"2020-11","mazout":945.19,"elec_comm":22.01,"elec_social":16.56,"elec_jour":16.781,"elec_nuit":13.562,"gaz_comm":4.41,"gaz_social":1.85},{"mois":"2020-12","mazout":1018.58,"elec_comm":22.03,"elec_social":16.56,"elec_jour":16.781,"elec_nuit":13.562,"gaz_comm":4.4,"gaz_social":1.85},{"mois":"2021-01","mazout":1093.46,"elec_comm":23.09,"elec_social":18.22,"elec_jour":18.459,"elec_nuit":14.919,"gaz_comm":4.75,"gaz_social":2.11},{"mois":"2021-02","mazout":1164.94,"elec_comm":23.65,"elec_social":18.22,"elec_jour":18.459,"elec_nuit":14.919,"gaz_comm":5.06,"gaz_social":2.11},{"mois":"2021-03","mazout":1274.92,"elec_comm":23.15,"elec_social":18.22,"elec_jour":18.459,"elec_nuit":14.919,"gaz_comm":4.83,"gaz_social":2.11},{"mois":"2021-04","mazout":1206.82,"elec_comm":23.07,"elec_social":20.0,"elec_jour":20.306,"elec_nuit":16.412,"gaz_comm":4.9,"gaz_social":2.41},{"mois":"2021-05","mazout":1281.06,"elec_comm":23.64,"elec_social":20.0,"elec_jour":20.306,"elec_nuit":16.412,"gaz_comm":5.1,"gaz_social":2.41},{"mois":"2021-06","mazout":1277.88,"elec_comm":23.57,"elec_social":20.0,"elec_jour":20.306,"elec_nuit":16.412,"gaz_comm":5.42,"gaz_social":2.41},{"mois":"2021-07","mazout":1395.69,"elec_comm":26.17,"elec_social":21.23,"elec_jour":21.546,"elec_nuit":17.433,"gaz_comm":6.28,"gaz_social":2.47},{"mois":"2021-08","mazout":1394.0,"elec_comm":26.43,"elec_social":21.23,"elec_jour":21.546,"elec_nuit":17.433,"gaz_comm":6.79,"gaz_social":2.47},{"mois":"2021-09","mazout":1442.85,"elec_comm":26.6,"elec_social":21.23,"elec_jour":21.546,"elec_nuit":17.433,"gaz_comm":7.35,"gaz_social":2.47},{"mois":"2021-10","mazout":1652.45,"elec_comm":33.7,"elec_social":22.74,"elec_jour":23.128,"elec_nuit":18.699,"gaz_comm":10.57,"gaz_social":2.74},{"mois":"2021-11","mazout":1666.2,"elec_comm":35.85,"elec_social":22.74,"elec_jour":23.128,"elec_nuit":18.699,"gaz_comm":12.04,"gaz_social":2.74},{"mois":"2021-12","mazout":1532.53,"elec_comm":36.73,"elec_social":22.74,"elec_jour":23.128,"elec_nuit":18.699,"gaz_comm":11.83,"gaz_social":2.74},{"mois":"2022-01","mazout":1776.39,"elec_comm":47.82,"elec_social":24.24,"elec_jour":25.032,"elec_nuit":20.238,"gaz_comm":16.13,"gaz_social":2.96},{"mois":"2022-02","mazout":1891.44,"elec_comm":44.64,"elec_social":24.24,"elec_jour":25.032,"elec_nuit":20.238,"gaz_comm":14.13,"gaz_social":2.96},{"mois":"2022-03","mazout":2850.39,"elec_comm":37.3,"elec_social":21.23,"elec_jour":25.032,"elec_nuit":17.73,"gaz_comm":13.96,"gaz_social":2.96},{"mois":"2022-04","mazout":1889.54,"elec_comm":43.67,"elec_social":22.91,"elec_jour":23.657,"elec_nuit":19.128,"gaz_comm":16.15,"gaz_social":2.85},{"mois":"2022-05","mazout":1920.28,"elec_comm":38.56,"elec_social":22.91,"elec_jour":23.657,"elec_nuit":19.128,"gaz_comm":14.05,"gaz_social":2.85},{"mois":"2022-06","mazout":2227.89,"elec_comm":37.9,"elec_social":22.91,"elec_jour":23.657,"elec_nuit":19.128,"gaz_comm":13.33,"gaz_social":2.85},{"mois":"2022-07","mazout":2061.34,"elec_comm":42.65,"elec_social":24.61,"elec_jour":25.417,"elec_nuit":20.553,"gaz_comm":13.87,"gaz_social":3.09},{"mois":"2022-08","mazout":1947.78,"elec_comm":49.26,"elec_social":24.61,"elec_jour":25.417,"elec_nuit":20.553,"gaz_comm":16.36,"gaz_social":3.09},{"mois":"2022-09","mazout":1994.13,"elec_comm":58.33,"elec_social":24.61,"elec_jour":25.417,"elec_nuit":20.553,"gaz_comm":17.48,"gaz_social":3.09},{"mois":"2022-10","mazout":2076.48,"elec_comm":67.54,"elec_social":26.51,"elec_jour":27.379,"elec_nuit":22.138,"gaz_comm":20.89,"gaz_social":3.4},{"mois":"2022-11","mazout":2143.22,"elec_comm":54.46,"elec_social":26.51,"elec_jour":27.379,"elec_nuit":22.138,"gaz_comm":16.48,"gaz_social":3.4},{"mois":"2022-12","mazout":1734.73,"elec_comm":56.36,"elec_social":26.51,"elec_jour":27.379,"elec_nuit":22.138,"gaz_comm":18.64,"gaz_social":3.4},{"mois":"2023-01","mazout":1663.97,"elec_comm":54.49,"elec_social":28.58,"elec_jour":29.515,"elec_nuit":23.865,"gaz_comm":16.1,"gaz_social":3.73},{"mois":"2023-02","mazout":1516.11,"elec_comm":45.55,"elec_social":28.58,"elec_jour":29.515,"elec_nuit":23.865,"gaz_comm":12.78,"gaz_social":3.73},{"mois":"2023-03","mazout":1501.28,"elec_comm":47.07,"elec_social":28.58,"elec_jour":29.515,"elec_nuit":23.865,"gaz_comm":12.59,"gaz_social":3.73},{"mois":"2023-04","mazout":1433.3,"elec_comm":36.57,"elec_social":30.782,"elec_jour":31.79,"elec_nuit":25.704,"gaz_comm":8.88,"gaz_social":4.084},{"mois":"2023-05","mazout":1315.26,"elec_comm":35.64,"elec_social":30.782,"elec_jour":31.79,"elec_nuit":25.704,"gaz_comm":8.55,"gaz_social":4.084},{"mois":"2023-06","mazout":1350.18,"elec_comm":33.02,"elec_social":30.782,"elec_jour":31.79,"elec_nuit":25.704,"gaz_comm":7.37,"gaz_social":4.084},{"mois":"2023-07","mazout":1369.8,"elec_comm":34.75,"elec_social":22.238,"elec_jour":22.238,"elec_nuit":22.238,"gaz_comm":7.74,"gaz_social":4.47},{"mois":"2023-08","mazout":1629.98,"elec_comm":32.99,"elec_social":22.238,"elec_jour":22.238,"elec_nuit":22.238,"gaz_comm":7.48,"gaz_social":4.47},{"mois":"2023-09","mazout":1739.05,"elec_comm":34.75,"elec_social":22.238,"elec_jour":22.238,"elec_nuit":22.238,"gaz_comm":7.95,"gaz_social":4.47},{"mois":"2023-10","mazout":1723.14,"elec_comm":34.84,"elec_social":21.568,"elec_jour":21.878,"elec_nuit":21.248,"gaz_comm":8.65,"gaz_social":4.9},{"mois":"2023-11","mazout":1610.53,"elec_comm":35.29,"elec_social":21.568,"elec_jour":21.878,"elec_nuit":21.248,"gaz_comm":9.47,"gaz_social":4.9},{"mois":"2023-12","mazout":1504.21,"elec_comm":34.94,"elec_social":21.568,"elec_jour":21.878,"elec_nuit":21.248,"gaz_comm":9.27,"gaz_social":4.9},{"mois":"2024-01","mazout":1728.15,"elec_comm":36.85,"elec_social":23.441,"elec_jour":23.96,"elec_nuit":23.301,"gaz_comm":10.17,"gaz_social":5.371},{"mois":"2024-02","mazout":1441.86,"elec_comm":35.53,"elec_social":23.441,"elec_jour":23.96,"elec_nuit":23.301,"gaz_comm":8.48,"gaz_social":5.371},{"mois":"2024-03","mazout":1377.21,"elec_comm":33.91,"elec_social":23.441,"elec_jour":23.96,"elec_nuit":23.301,"gaz_comm":7.94,"gaz_social":5.371},{"mois":"2024-04","mazout":1541.45,"elec_comm":32.88,"elec_social":18.183,"elec_jour":18.563,"elec_nuit":17.893,"gaz_comm":7.84,"gaz_social":4.331},{"mois":"2024-05","mazout":1518.3,"elec_comm":32.16,"elec_social":18.183,"elec_jour":18.563,"elec_nuit":17.893,"gaz_comm":8.26,"gaz_social":4.331},{"mois":"2024-06","mazout":1527.39,"elec_comm":32.98,"elec_social":18.183,"elec_jour":18.563,"elec_nuit":17.893,"gaz_comm":8.62,"gaz_social":4.331},{"mois":"2024-07","mazout":1445.66,"elec_comm":33.53,"elec_social":17.203,"elec_jour":17.573,"elec_nuit":16.914,"gaz_comm":8.99,"gaz_social":4.457},{"mois":"2024-08","mazout":1363.15,"elec_comm":34.12,"elec_social":17.203,"elec_jour":17.573,"elec_nuit":16.914,"gaz_comm":8.63,"gaz_social":4.457},{"mois":"2024-09","mazout":1274.47,"elec_comm":35.68,"elec_social":17.203,"elec_jour":17.573,"elec_nuit":16.914,"gaz_comm":9.3,"gaz_social":4.457},{"mois":"2024-10","mazout":1317.11,"elec_comm":34.19,"elec_social":18.923,"elec_jour":19.33,"elec_nuit":18.605,"gaz_comm":8.83,"gaz_social":5.126},{"mois":"2024-11","mazout":1347.39,"elec_comm":35.23,"elec_social":18.923,"elec_jour":19.33,"elec_nuit":18.605,"gaz_comm":9.39,"gaz_social":5.126},{"mois":"2024-12","mazout":1351.72,"elec_comm":37.97,"elec_social":18.923,"elec_jour":19.33,"elec_nuit":18.605,"gaz_comm":9.79,"gaz_social":5.126},{"mois":"2025-01","mazout":1432.22,"elec_comm":39.91,"elec_social":20.815,"elec_jour":21.263,"elec_nuit":20.466,"gaz_comm":9.89,"gaz_social":5.894},{"mois":"2025-02","mazout":1425.26,"elec_comm":40.59,"elec_social":20.815,"elec_jour":21.263,"elec_nuit":20.466,"gaz_comm":10.1,"gaz_social":5.894},{"mois":"2025-03","mazout":1322.37,"elec_comm":41.3,"elec_social":20.815,"elec_jour":21.263,"elec_nuit":20.466,"gaz_comm":10.29,"gaz_social":5.894},{"mois":"2025-04","mazout":1227.66,"elec_comm":37.86,"elec_social":22.538,"elec_jour":23.019,"elec_nuit":22.163,"gaz_comm":9.32,"gaz_social":6.19},{"mois":"2025-05","mazout":1174.2,"elec_comm":35.7,"elec_social":22.538,"elec_jour":23.019,"elec_nuit":22.163,"gaz_comm":8.52,"gaz_social":6.19},{"mois":"2025-06","mazout":1276.48,"elec_comm":35.15,"elec_social":22.538,"elec_jour":23.019,"elec_nuit":22.163,"gaz_comm":8.58,"gaz_social":6.19},{"mois":"2025-07","mazout":1330.55,"elec_comm":35.9,"elec_social":23.844,"elec_jour":24.355,"elec_nuit":23.444,"gaz_comm":8.66,"gaz_social":5.338},{"mois":"2025-08","mazout":1267.52,"elec_comm":36.46,"elec_social":23.844,"elec_jour":24.355,"elec_nuit":23.444,"gaz_comm":8.45,"gaz_social":5.338},{"mois":"2025-09","mazout":1276.02,"elec_comm":36.32,"elec_social":23.844,"elec_jour":24.355,"elec_nuit":23.444,"gaz_comm":8.25,"gaz_social":5.338},{"mois":"2025-10","mazout":1238.94,"elec_comm":36.1,"elec_social":22.773,"elec_jour":23.159,"elec_nuit":20.759,"gaz_comm":8.25,"gaz_social":4.745},{"mois":"2025-11","mazout":1371.65,"elec_comm":37.12,"elec_social":22.773,"elec_jour":23.159,"elec_nuit":20.759,"gaz_comm":8.15,"gaz_social":4.745},{"mois":"2025-12","mazout":1108.54,"elec_comm":37.64,"elec_social":22.773,"elec_jour":23.159,"elec_nuit":20.759,"gaz_comm":7.97,"gaz_social":4.745},{"mois":"2026-01","mazout":1001.16,"elec_comm":38.18,"elec_social":24.795,"elec_jour":24.795,"elec_nuit":22.836,"gaz_comm":7.84,"gaz_social":4.514},{"mois":"2026-02","mazout":1268.6,"elec_comm":40.47,"elec_social":24.795,"elec_jour":24.795,"elec_nuit":22.836,"gaz_comm":8.41,"gaz_social":4.514},{"mois":"2026-03","mazout":1815.53,"elec_comm":37.82,"elec_social":24.795,"elec_jour":24.795,"elec_nuit":22.836,"gaz_comm":8.31,"gaz_social":4.514},{"mois":"2026-04","mazout":2117.42,"elec_comm":39.82,"elec_social":23.767,"elec_jour":25.468,"elec_nuit":24.257,"gaz_comm":10.89,"gaz_social":4.746},{"mois":"2026-05","mazout":1964.62,"elec_comm":37.75,"elec_social":23.767,"elec_jour":25.468,"elec_nuit":24.257,"gaz_comm":9.85,"gaz_social":4.746},{"mois":"2026-06","mazout":2920.05,"elec_comm":39.04,"elec_social":23.767,"elec_jour":25.468,"elec_nuit":24.257,"gaz_comm":9.93,"gaz_social":4.746},{"mois":"2026-07","mazout":1867.13,"elec_comm":40.4,"elec_social":24.927,"elec_jour":26.797,"elec_nuit":23.328,"gaz_comm":9.65,"gaz_social":5.458},{"mois":"2026-08","mazout":null,"elec_comm":null,"elec_social":24.927,"elec_jour":26.797,"elec_nuit":23.328,"gaz_comm":null,"gaz_social":5.458},{"mois":"2026-09","mazout":null,"elec_comm":null,"elec_social":24.927,"elec_jour":26.797,"elec_nuit":23.328,"gaz_comm":null,"gaz_social":5.458},{"mois":"2026-10","mazout":null,"elec_comm":null,"elec_social":null,"elec_jour":null,"elec_nuit":null,"gaz_comm":null,"gaz_social":null},{"mois":"2026-11","mazout":null,"elec_comm":null,"elec_social":null,"elec_jour":null,"elec_nuit":null,"gaz_comm":null,"gaz_social":null},{"mois":"2026-12","mazout":null,"elec_comm":null,"elec_social":null,"elec_jour":null,"elec_nuit":null,"gaz_comm":null,"gaz_social":null}]};
+
+/* ================= traductions ================= */
+const T = {
+ fr:{
+  htmlLang:"fr",
+  eyebrow:"Outil d'aide — énergie",
+  title:"Calculateur de prix de l'énergie",
+  lede:"Prix moyens de l'électricité, du gaz et du mazout à Bruxelles. Permet de vérifier le tarif repris sur un décompte, ou d'estimer un montant à partir d'une consommation.",
+  s1:"Énergie", s1sub:"— un seul choix",
+  s1hint:"Ce choix détermine l'unité du graphique et la liste des séries disponibles. Deux énergies ne se comparent pas sur un même graphique.",
+  s2:"Séries", s2sub:"— plusieurs choix possibles",
+  s2hint:"Les séries cochées sont tracées sur le graphique. Les moyennes de toutes les séries sont calculées dans tous les cas.",
+  s3:"Période",
+  s3hint:"Mois de début et mois de fin, tous deux inclus.",
+  from:"Du", to:"Au",
+  s4:"Convertir en euros", s4sub:"— facultatif",
+  s4hint:"Reprend le prix moyen de la période et le multiplie par une consommation. Laissez vide si vous ne voulez que les prix.",
+  conso:"Consommation", billed:"Montant facturé (facultatif)",
+  s4note:"La consommation doit correspondre à la période choisie ci-dessus.",
+  calc:"Calculer", reset:"Réinitialiser",
+  recap:"Paramètres",
+  r1:"1 — Moyennes de la période", r1hint:"Les séries cochées apparaissent en gras.",
+  r2:"2 — Graphique", r2hint:"Un point par mois. Survolez le graphique pour lire les valeurs exactes.",
+  r3:"3 — Montants estimés",
+  r4:"4 — Détail mois par mois", r4hint:"Les chiffres bruts, à reprendre dans un courrier ou un dossier.",
+  copy:"Copier le tableau", csv:"Exporter en CSV", png:"Image du graphique", print:"Imprimer",
+  n1:"Prix TVA comprise. Source : CREG. Moyenne arithmétique des mois de la période, sans pondération saisonnière : une période d'hiver est donc sous-estimée et une période d'été surestimée.",
+  n2:"Les prix ne couvrent que la consommation : la redevance fixe (abonnement) n'est pas comprise. Un montant estimé ici sera donc inférieur à la facture réelle.",
+  n3:"Outil d'estimation destiné aux services d'aide. Il ne remplace ni le décompte du fournisseur, ni un avis juridique.",
+  avgCol:"Série", avgVal:"Moyenne", unitCol:"Unité",
+  month:"Mois", chart:"au graphique",
+  needSerie:"Cochez au moins une série pour afficher un graphique.",
+  errEnergy:"Choisissez une énergie.",
+  errPeriod:"Indiquez un mois de début et un mois de fin.",
+  errOrder:"Le mois de début doit précéder le mois de fin.",
+  errNoData:"Aucune donnée pour cette période.",
+  errConso:"La consommation doit être un nombre.",
+  coverOk:n=>n+" mois · données complètes",
+  coverKo:(n,m)=>n+" mois · "+m+" sans donnée",
+  nMonths:n=>"sur "+n+" mois",
+  billedTitle:"Comparaison avec le montant facturé",
+  billedRow:(s,d,p)=>"Par rapport à « "+s+" » : "+d+" ("+p+")",
+  above:"au-dessus", below:"en dessous",
+  dataOf:d=>"Données mises à jour le "+d,
+  loadErr:"Fichier de données introuvable — données intégrées utilisées.",
+  months:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
+  mshort:["janv","févr","mars","avr","mai","juin","juil","août","sept","oct","nov","déc"],
+  energies:{elec:"Électricité", gaz:"Gaz", mazout:"Mazout"},
+  series:{
+   elec_comm:"Prix moyen commercial",
+   elec_social:"Tarif social — mono-horaire",
+   elec_jour:"Tarif social — bi-horaire jour",
+   elec_nuit:"Tarif social — bi-horaire nuit",
+   gaz_comm:"Prix moyen commercial",
+   gaz_social:"Tarif social",
+   mazout:"Prix moyen commercial"
+  },
+  refs:{elec:"3 500 kWh/an", gaz:"23 260 kWh/an", mazout:"1 545 L"}
+ },
+ nl:{
+  htmlLang:"nl",
+  eyebrow:"Hulpmiddel — energie",
+  title:"Rekentool energieprijzen",
+  lede:"Gemiddelde prijzen voor elektriciteit, gas en stookolie in Brussel. Om het tarief op een afrekening na te gaan, of een bedrag te ramen op basis van een verbruik.",
+  s1:"Energie", s1sub:"— één keuze",
+  s1hint:"Deze keuze bepaalt de eenheid van de grafiek en de beschikbare reeksen. Twee energievormen worden niet op dezelfde grafiek vergeleken.",
+  s2:"Reeksen", s2sub:"— meerdere keuzes mogelijk",
+  s2hint:"De aangevinkte reeksen worden op de grafiek getekend. De gemiddelden van alle reeksen worden hoe dan ook berekend.",
+  s3:"Periode",
+  s3hint:"Begin- en eindmaand, beide inbegrepen.",
+  from:"Van", to:"Tot",
+  s4:"Omzetten naar euro", s4sub:"— facultatief",
+  s4hint:"Neemt de gemiddelde prijs van de periode en vermenigvuldigt die met een verbruik. Laat leeg als u enkel de prijzen wenst.",
+  conso:"Verbruik", billed:"Gefactureerd bedrag (facultatief)",
+  s4note:"Het verbruik moet overeenstemmen met de hierboven gekozen periode.",
+  calc:"Berekenen", reset:"Opnieuw",
+  recap:"Parameters",
+  r1:"1 — Gemiddelden van de periode", r1hint:"De aangevinkte reeksen staan in het vet.",
+  r2:"2 — Grafiek", r2hint:"Eén punt per maand. Beweeg over de grafiek voor de exacte waarden.",
+  r3:"3 — Geraamde bedragen",
+  r4:"4 — Detail per maand", r4hint:"De ruwe cijfers, over te nemen in een brief of dossier.",
+  copy:"Tabel kopiëren", csv:"CSV exporteren", png:"Afbeelding van de grafiek", print:"Afdrukken",
+  n1:"Prijzen inclusief btw. Bron: CREG. Rekenkundig gemiddelde van de maanden van de periode, zonder correctie voor seizoensgebondenheid: een winterperiode wordt dus onderschat en een zomerperiode overschat.",
+  n2:"De prijzen dekken enkel het verbruik: de vaste vergoeding (abonnement) is niet inbegrepen. Een hier geraamd bedrag ligt dus lager dan de werkelijke factuur.",
+  n3:"Ramingsinstrument voor hulpverleningsdiensten. Het vervangt noch de afrekening van de leverancier, noch juridisch advies.",
+  avgCol:"Reeks", avgVal:"Gemiddelde", unitCol:"Eenheid",
+  month:"Maand", chart:"op de grafiek",
+  needSerie:"Vink minstens één reeks aan om een grafiek te tonen.",
+  errEnergy:"Kies een energievorm.",
+  errPeriod:"Geef een begin- en een eindmaand op.",
+  errOrder:"De beginmaand moet vóór de eindmaand liggen.",
+  errNoData:"Geen gegevens voor deze periode.",
+  errConso:"Het verbruik moet een getal zijn.",
+  coverOk:n=>n+" maanden · volledige gegevens",
+  coverKo:(n,m)=>n+" maanden · "+m+" zonder gegevens",
+  nMonths:n=>"over "+n+" maanden",
+  billedTitle:"Vergelijking met het gefactureerde bedrag",
+  billedRow:(s,d,p)=>"Ten opzichte van « "+s+" »: "+d+" ("+p+")",
+  above:"hoger", below:"lager",
+  dataOf:d=>"Gegevens bijgewerkt op "+d,
+  loadErr:"Gegevensbestand niet gevonden — ingebouwde gegevens gebruikt.",
+  months:["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],
+  mshort:["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"],
+  energies:{elec:"Elektriciteit", gaz:"Gas", mazout:"Stookolie"},
+  series:{
+   elec_comm:"Gemiddelde commerciële prijs",
+   elec_social:"Sociaal tarief — enkelvoudig",
+   elec_jour:"Sociaal tarief — tweevoudig dag",
+   elec_nuit:"Sociaal tarief — tweevoudig nacht",
+   gaz_comm:"Gemiddelde commerciële prijs",
+   gaz_social:"Sociaal tarief",
+   mazout:"Gemiddelde commerciële prijs"
+  },
+  refs:{elec:"3 500 kWh/jaar", gaz:"23 260 kWh/jaar", mazout:"1 545 L"}
+ }
+};
+
+/* ================= configuration des séries ================= */
+const ENERGIES = {
+  elec:  {unit:"c€/kWh", consoUnit:"kWh", dec:4, keys:["elec_comm","elec_social","elec_jour","elec_nuit"]},
+  gaz:   {unit:"c€/kWh", consoUnit:"kWh", dec:4, keys:["gaz_comm","gaz_social"]},
+  mazout:{unit:"€ / 1 545 L", consoUnit:"L", dec:2, keys:["mazout"]}
+};
+const STYLE = {
+  elec_comm:   {color:"#0085a0", dash:"",          mark:"circle"},
+  elec_social: {color:"#B5531A", dash:"7 5",       mark:"square"},
+  elec_jour:   {color:"#6A4C93", dash:"2 3",       mark:"triangle"},
+  elec_nuit:   {color:"#4D4D4D", dash:"10 4 2 4",  mark:"diamond"},
+  gaz_comm:    {color:"#0085a0", dash:"",          mark:"circle"},
+  gaz_social:  {color:"#B5531A", dash:"7 5",       mark:"square"},
+  mazout:      {color:"#0085a0", dash:"",          mark:"circle"}
+};
+
+/* ================= état ================= */
+let LANG = "fr";
+let DATA = null;
+let LAST = null;
+const $ = s => document.querySelector(s);
+const t = () => T[LANG];
+
+/* ================= utilitaires ================= */
+function nf(v, dec){
+  if(v === null || v === undefined || !isFinite(v)) return "—";
+  return v.toLocaleString(LANG === "fr" ? "fr-BE" : "nl-BE",
+    {minimumFractionDigits:dec, maximumFractionDigits:dec});
+}
+function monthLabel(ym, short){
+  const [y,m] = ym.split("-").map(Number);
+  const names = short ? t().mshort : t().months;
+  return names[m-1] + " " + y;
+}
+function addMonth(ym, n){
+  let [y,m] = ym.split("-").map(Number);
+  const z = (y*12 + (m-1)) + n;
+  return String(Math.floor(z/12)).padStart(4,"0") + "-" + String(z%12 + 1).padStart(2,"0");
+}
+function parseNum(s){
+  if(typeof s !== "string") return null;
+  const c = s.replace(/[\s  ']/g,"").replace(",",".");
+  if(c === "") return null;
+  const v = Number(c);
+  return isFinite(v) ? v : null;
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ================= chargement des données ================= */
+async function loadData(){
+  try{
+    const r = await fetch("donnees.json", {cache:"no-store"});
+    if(!r.ok) throw new Error("http " + r.status);
+    DATA = await r.json();
+  }catch(e){
+    if(!FALLBACK) throw e;
+    DATA = FALLBACK;
+    DATA._fallback = true;
+  }
+  DATA.mois.sort((a,b) => a.mois < b.mois ? -1 : 1);
+}
+
+/* ================= rendu de l'interface ================= */
+function applyLang(){
+  document.documentElement.lang = t().htmlLang;
+  document.title = t().title;
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t()[el.dataset.t]; });
+  $("#btn-fr").setAttribute("aria-pressed", LANG === "fr");
+  $("#btn-nl").setAttribute("aria-pressed", LANG === "nl");
+  renderEnergies();
+  renderSeries();
+  updateConsoUnit();
+  $("#datainfo").textContent = t().dataOf(DATA.miseAJour) + (DATA._fallback ? " — " + t().loadErr : "");
+  if(LAST) compute(true);
+}
+function currentEnergy(){
+  const el = document.querySelector('input[name="energie"]:checked');
+  return el ? el.value : null;
+}
+function renderEnergies(){
+  const cur = currentEnergy();
+  $("#energies").innerHTML = Object.keys(ENERGIES).map(k =>
+    '<label class="pill"><input type="radio" name="energie" value="'+k+'"'+(cur===k?" checked":"")+'> '
+    + esc(t().energies[k]) + '</label>').join("");
+  document.querySelectorAll('input[name="energie"]').forEach(r =>
+    r.addEventListener("change", () => { renderSeries(); updateConsoUnit(); }));
+}
+function renderSeries(){
+  const e = currentEnergy();
+  const box = $("#series");
+  if(!e){ box.innerHTML = '<div class="serie" style="color:var(--muted);cursor:default">— ' + esc(t().s1) + ' —</div>'; return; }
+  const checked = new Set([...document.querySelectorAll('input[name="serie"]:checked')].map(c => c.value));
+  box.innerHTML = ENERGIES[e].keys.map(k =>
+    '<label class="serie"><input type="checkbox" name="serie" value="'+k+'"'+(checked.has(k)?" checked":"")+'>'
+    + '<span class="swatch" style="border-top-color:'+STYLE[k].color+';border-top-style:'+(STYLE[k].dash?"dashed":"solid")+'"></span>'
+    + '<span>'+esc(t().series[k])+'</span>'
+    + '<span class="u">'+esc(ENERGIES[e].unit)+'</span></label>').join("");
+}
+function updateConsoUnit(){
+  const e = currentEnergy();
+  $("#conso-unit").textContent = e ? ENERGIES[e].consoUnit : "";
+}
+
+/* ================= calcul ================= */
+function rowsIn(from, to){
+  return DATA.mois.filter(r => r.mois >= from && r.mois <= to);
+}
+function average(rows, key){
+  const v = rows.map(r => r[key]).filter(x => typeof x === "number" && isFinite(x));
+  if(!v.length) return {avg:null, n:0};
+  return {avg: v.reduce((a,b) => a+b, 0) / v.length, n: v.length};
+}
+function monthSpan(from, to){
+  const [y1,m1] = from.split("-").map(Number), [y2,m2] = to.split("-").map(Number);
+  return (y2*12+m2) - (y1*12+m1) + 1;
+}
+
+function compute(silent){
+  const err = $("#error");
+  const fail = m => { err.textContent = m; err.hidden = false; $("#out").hidden = true; return false; };
+  err.hidden = true;
+
+  const e = currentEnergy();
+  if(!e) return fail(t().errEnergy);
+  const from = $("#from").value, to = $("#to").value;
+  if(!from || !to) return fail(t().errPeriod);
+  if(from > to)    return fail(t().errOrder);
+
+  const rows = rowsIn(from, to);
+  if(!rows.length) return fail(t().errNoData);
+
+  const consoRaw = $("#conso").value.trim();
+  const conso = consoRaw ? parseNum(consoRaw) : null;
+  if(consoRaw && conso === null) return fail(t().errConso);
+  const billedRaw = $("#billed").value.trim();
+  const billed = billedRaw ? parseNum(billedRaw) : null;
+
+  const picked = [...document.querySelectorAll('input[name="serie"]:checked')].map(c => c.value);
+  const cfg = ENERGIES[e];
+
+  const stats = cfg.keys.map(k => {
+    const a = average(rows, k);
+    return {key:k, avg:a.avg, n:a.n, on:picked.includes(k)};
+  });
+
+  LAST = {e, from, to, rows, stats, picked, conso, billed, cfg};
+  render();
+  if(!silent) $("#out").scrollIntoView({behavior:"smooth", block:"start"});
+  return true;
+}
+
+/* ================= affichage des résultats ================= */
+function render(){
+  const {e, from, to, rows, stats, picked, conso, billed, cfg} = LAST;
+  $("#out").hidden = false;
+
+  const span = monthSpan(from, to);
+  const names = picked.length ? picked.map(k => t().series[k]).join(" + ") : "—";
+  $("#recap").textContent = t().energies[e] + " · " + names + " · " + monthLabel(from) + " → " + monthLabel(to);
+
+  const maxN = Math.max(...stats.map(s => s.n));
+  const miss = span - maxN;
+  const cov = $("#cover");
+  cov.className = miss > 0 ? "ko" : "ok";
+  cov.textContent = miss > 0 ? t().coverKo(span, miss) : t().coverOk(span);
+
+  /* 1 — moyennes */
+  $("#avg").innerHTML = "<thead><tr><th></th><th>"+esc(t().avgCol)+"</th><th class='n'>"+esc(t().avgVal)
+    + "</th><th>"+esc(t().unitCol)+"</th></tr></thead><tbody>"
+    + stats.map(s =>
+      "<tr class='"+(s.on?"on":"off")+"'>"
+      + "<td style='width:26px'>"+(s.on?"<span class='dot' style='background:"+STYLE[s.key].color+"'></span>":"")+"</td>"
+      + "<td>"+esc(t().series[s.key])+"</td>"
+      + "<td class='n tnum'>"+nf(s.avg, cfg.dec)+"</td>"
+      + "<td style='color:var(--muted);font-size:13px'>"+esc(cfg.unit)+"</td></tr>").join("")
+    + "</tbody>";
+
+  /* 2 — graphique */
+  drawChart();
+
+  /* 3 — montants */
+  const mb = $("#money-block");
+  if(conso === null || !isFinite(conso)){
+    mb.hidden = true;
+  }else{
+    mb.hidden = false;
+    $("#money-hint").textContent = nf(conso,0) + " " + cfg.consoUnit + " — " + t().nMonths(span) + ".";
+    const amounts = stats.map(s => ({...s, eur: s.avg === null ? null : toEuro(s.avg, conso, e)}));
+    $("#money").innerHTML = "<thead><tr><th></th><th>"+esc(t().avgCol)+"</th><th class='n'>€</th></tr></thead><tbody>"
+      + amounts.map(s =>
+        "<tr class='"+(s.on?"on":"off")+"'>"
+        + "<td style='width:26px'>"+(s.on?"<span class='dot' style='background:"+STYLE[s.key].color+"'></span>":"")+"</td>"
+        + "<td>"+esc(t().series[s.key])+"</td>"
+        + "<td class='n tnum'>"+(s.eur===null?"—":nf(s.eur,2)+" €")+"</td></tr>").join("")
+      + "</tbody>";
+
+    const bo = $("#billed-out");
+    if(billed !== null && isFinite(billed)){
+      bo.innerHTML = "<div class='msg msg-info'><strong>"+esc(t().billedTitle)+" : "+nf(billed,2)+" €</strong><br>"
+        + amounts.filter(s => s.eur !== null).map(s => {
+            const d = billed - s.eur, p = s.eur ? (d / s.eur * 100) : 0;
+            return esc(t().billedRow(t().series[s.key],
+              (d>=0?"+":"−") + nf(Math.abs(d),2) + " €",
+              (d>=0?"+":"−") + nf(Math.abs(p),1) + " % " + (d>=0 ? t().above : t().below)));
+          }).join("<br>")
+        + "</div>";
+    }else bo.innerHTML = "";
+  }
+
+  /* 4 — détail */
+  const keys = cfg.keys;
+  $("#detail").innerHTML =
+    "<thead><tr><th>"+esc(t().month)+"</th>"
+    + keys.map(k => "<th class='n'>"+esc(t().series[k])+"</th>").join("") + "</tr></thead><tbody>"
+    + rows.map(r => "<tr><td>"+esc(monthLabel(r.mois))+"</td>"
+        + keys.map(k => "<td class='n tnum'"+(picked.includes(k)?"":" style='color:var(--muted)'")+">"
+            + nf(r[k], cfg.dec)+"</td>").join("") + "</tr>").join("")
+    + "<tr class='tot'><td>"+esc(t().avgVal)+"</td>"
+    + stats.map(s => "<td class='n tnum'>"+nf(s.avg, cfg.dec)+"</td>").join("")
+    + "</tr></tbody>";
+}
+
+function toEuro(avg, conso, e){
+  if(e === "mazout") return avg / 1545 * conso;   // € pour 1 545 L -> €/L
+  return avg * conso / 100;                       // c€/kWh -> €
+}
+
+/* ================= graphique ================= */
+const W = 1000, H = 330, ML = 62, MR = 44, MT = 34, MB = 44;
+const PW = W - ML - MR, PH = H - MT - MB;
+
+function niceScale(lo, hi){
+  if(lo === hi){ lo -= 1; hi += 1; }
+  const pad = (hi - lo) * 0.12;
+  lo -= pad; hi += pad;
+  const raw = (hi - lo) / 6;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1,2,2.5,5,10].find(m => m*mag >= raw) * mag;
+  return {min: Math.floor(lo/step)*step, max: Math.ceil(hi/step)*step, step};
+}
+function marker(kind, x, y, c){
+  const r = 3.6;
+  if(kind === "square")   return "<rect x='"+(x-r)+"' y='"+(y-r)+"' width='"+(2*r)+"' height='"+(2*r)+"' fill='"+c+"'/>";
+  if(kind === "triangle") return "<polygon points='"+x+","+(y-r-1)+" "+(x+r+1)+","+(y+r)+" "+(x-r-1)+","+(y+r)+"' fill='"+c+"'/>";
+  if(kind === "diamond")  return "<polygon points='"+x+","+(y-r-1)+" "+(x+r+1)+","+y+" "+x+","+(y+r+1)+" "+(x-r-1)+","+y+"' fill='"+c+"'/>";
+  return "<circle cx='"+x+"' cy='"+y+"' r='"+r+"' fill='"+c+"'/>";
+}
+
+function drawChart(){
+  const {rows, picked, cfg} = LAST;
+  const box = $("#chartbox"), tip = $("#tip");
+  tip.hidden = true;
+  $("#legend").innerHTML = "";
+  box.querySelectorAll("svg,.msg").forEach(n => n.remove());
+
+  if(!picked.length){
+    box.insertAdjacentHTML("beforeend", "<p class='msg msg-info' style='margin:8px'>"+esc(t().needSerie)+"</p>");
+    return;
+  }
+
+  $("#legend").innerHTML = picked.map(k =>
+    "<span><span class='swatch' style='width:26px;border-top-color:"+STYLE[k].color
+    + ";border-top-style:"+(STYLE[k].dash?"dashed":"solid")+"'></span>"+esc(t().series[k])+"</span>").join("");
+
+  const vals = [];
+  picked.forEach(k => rows.forEach(r => { if(typeof r[k] === "number") vals.push(r[k]); }));
+  if(!vals.length){
+    box.insertAdjacentHTML("beforeend", "<p class='msg msg-info' style='margin:8px'>"+esc(t().errNoData)+"</p>");
+    return;
+  }
+  const sc = niceScale(Math.min(...vals), Math.max(...vals));
+  const n = rows.length;
+  const X = i => ML + (n === 1 ? PW/2 : i * PW / (n-1));
+  const Y = v => MT + PH - (v - sc.min) / (sc.max - sc.min) * PH;
+
+  let s = "";
+  for(let g = sc.min; g <= sc.max + 1e-9; g += sc.step){
+    const y = Y(g), last = Math.abs(g - sc.min) < 1e-9;
+    s += "<line x1='"+ML+"' y1='"+y.toFixed(1)+"' x2='"+(W-MR)+"' y2='"+y.toFixed(1)
+       + "' stroke='"+(last?"#C9D2D6":"#ECF1F2")+"' stroke-width='1'/>";
+    s += "<text x='"+(ML-10)+"' y='"+(y+4).toFixed(1)+"' text-anchor='end' font-size='12' fill='#5B6670'>"
+       + esc(nf(g, sc.step < 1 ? 2 : 0)) + "</text>";
+  }
+  s += "<text x='"+(ML-10)+"' y='"+(MT-14)+"' text-anchor='end' font-size='11' font-weight='600' fill='#5B6670'>"
+     + esc(cfg.unit) + "</text>";
+
+  /* étiquettes réparties régulièrement, premier et dernier mois toujours inclus
+     et jamais collés l'un à l'autre */
+  const nLab = Math.max(2, Math.min(n, 13));
+  const ticks = n === 1 ? [0]
+    : [...new Set(Array.from({length:nLab}, (_,j) => Math.round(j * (n-1) / (nLab-1))))];
+  ticks.forEach(i => {
+    s += "<text x='"+X(i).toFixed(1)+"' y='"+(MT+PH+22)+"' text-anchor='middle' font-size='11.5' fill='#5B6670'>"
+       + esc(monthLabel(rows[i].mois, true)) + "</text>";
+  });
+
+  picked.forEach(k => {
+    const c = STYLE[k].color;
+    const segs = []; let cur = [];
+    rows.forEach((r,i) => {
+      if(typeof r[k] === "number") cur.push(X(i).toFixed(1) + "," + Y(r[k]).toFixed(1));
+      else { if(cur.length) segs.push(cur); cur = []; }
+    });
+    if(cur.length) segs.push(cur);
+    segs.forEach(p => {
+      s += "<polyline fill='none' stroke='"+c+"' stroke-width='2.5' stroke-linejoin='round' stroke-linecap='round'"
+         + (STYLE[k].dash ? " stroke-dasharray='"+STYLE[k].dash+"'" : "") + " points='"+p.join(" ")+"'/>";
+    });
+    const a = average(rows, k).avg;
+    if(a !== null) s += "<line x1='"+ML+"' y1='"+Y(a).toFixed(1)+"' x2='"+(W-MR)+"' y2='"+Y(a).toFixed(1)
+      + "' stroke='"+c+"' stroke-width='1.2' stroke-dasharray='2 4' opacity='0.75'/>";
+    if(n <= 90) rows.forEach((r,i) => {
+      if(typeof r[k] === "number") s += marker(STYLE[k].mark, X(i).toFixed(1), Y(r[k]).toFixed(1), c);
+    });
+  });
+
+  s += "<line id='cursor' x1='0' y1='"+MT+"' x2='0' y2='"+(MT+PH)+"' stroke='#5B6670' stroke-width='1' stroke-dasharray='3 3' opacity='0'/>";
+
+  const svg = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'
+    + esc(t().r2 + " — " + t().energies[LAST.e]) + '" font-family="system-ui, sans-serif">' + s + '</svg>';
+  box.insertAdjacentHTML("beforeend", svg);
+
+  const el = box.querySelector("svg");
+  const cursor = el.querySelector("#cursor");
+  const move = ev => {
+    const p = ev.touches ? ev.touches[0] : ev;
+    const b = el.getBoundingClientRect();
+    const px = (p.clientX - b.left) / b.width * W;
+    let i = n === 1 ? 0 : Math.round((px - ML) / (PW / (n-1)));
+    i = Math.max(0, Math.min(n-1, i));
+    const r = rows[i];
+    const live = picked.filter(k => typeof r[k] === "number");
+    if(!live.length){ tip.hidden = true; cursor.setAttribute("opacity","0"); return; }
+    tip.hidden = false;
+    tip.innerHTML = "<div class='m'>"+esc(monthLabel(r.mois))+"</div>"
+      + live.map(k => "<div class='r'><span class='dot' style='background:"+STYLE[k].color+"'></span>"
+          + esc(t().series[k])+" <b>"+nf(r[k], cfg.dec)+"</b></div>").join("");
+    tip.style.left = (X(i) / W * 100) + "%";
+    tip.style.top  = (Y(Math.max(...live.map(k => r[k]))) / H * b.height) + "px";
+    cursor.setAttribute("x1", X(i)); cursor.setAttribute("x2", X(i)); cursor.setAttribute("opacity","1");
+  };
+  el.addEventListener("mousemove", move);
+  el.addEventListener("touchstart", move, {passive:true});
+  el.addEventListener("touchmove", move, {passive:true});
+  el.addEventListener("mouseleave", () => { tip.hidden = true; cursor.setAttribute("opacity","0"); });
+}
+
+/* ================= exports ================= */
+function tableMatrix(){
+  const {rows, cfg, stats} = LAST;
+  const head = [t().month].concat(cfg.keys.map(k => t().series[k] + " (" + cfg.unit + ")"));
+  const body = rows.map(r => [monthLabel(r.mois)].concat(cfg.keys.map(k => nf(r[k], cfg.dec))));
+  body.push([t().avgVal].concat(stats.map(s => nf(s.avg, cfg.dec))));
+  return [head].concat(body);
+}
+function doCopy(){
+  const txt = tableMatrix().map(r => r.join("\t")).join("\n");
+  navigator.clipboard.writeText(txt).then(
+    () => flash($("#copy")),
+    () => { const ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta);
+            ta.select(); document.execCommand("copy"); ta.remove(); flash($("#copy")); });
+}
+function flash(btn){
+  const old = btn.textContent;
+  btn.textContent = "✓"; setTimeout(() => { btn.textContent = old; }, 1200);
+}
+function doCsv(){
+  /* point-virgule + virgule décimale : lisible directement par Excel en Belgique */
+  const csv = tableMatrix().map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(";")).join("\r\n");
+  download(new Blob(["﻿" + csv], {type:"text/csv;charset=utf-8"}),
+    "prix-energie-" + LAST.e + "-" + LAST.from + "_" + LAST.to + ".csv");
+}
+function doPng(){
+  const svg = $("#chartbox svg"); if(!svg) return;
+  const src = new XMLSerializer().serializeToString(svg);
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement("canvas");
+    c.width = W * 2; c.height = H * 2;
+    const g = c.getContext("2d");
+    g.fillStyle = "#fff"; g.fillRect(0,0,c.width,c.height);
+    g.drawImage(img, 0, 0, c.width, c.height);
+    c.toBlob(b => download(b, "graphique-" + LAST.e + "-" + LAST.from + "_" + LAST.to + ".png"));
+  };
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(src);
+}
+function download(blob, name){
+  const u = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 2000);
+}
+
+/* ================= démarrage ================= */
+(async function init(){
+  try{ await loadData(); }
+  catch(e){
+    document.querySelector(".wrap").insertAdjacentHTML("afterbegin",
+      "<p class='msg msg-warn' style='margin-top:20px'>Données indisponibles / Gegevens niet beschikbaar.</p>");
+    return;
+  }
+  const all = DATA.mois.map(r => r.mois);
+  const lo = all[0], hi = all[all.length-1];
+  ["from","to"].forEach(id => { $("#"+id).min = lo; $("#"+id).max = hi; });
+  $("#from").value = lo;
+  $("#to").value = hi;
+
+  const stored = (() => { try{ return localStorage.getItem("lang"); }catch(e){ return null; } })();
+  const nav = (navigator.language || "fr").slice(0,2).toLowerCase();
+  LANG = stored || (nav === "nl" ? "nl" : "fr");
+
+  applyLang();
+
+  $("#btn-fr").addEventListener("click", () => setLang("fr"));
+  $("#btn-nl").addEventListener("click", () => setLang("nl"));
+  $("#form").addEventListener("submit", ev => { ev.preventDefault(); compute(false); });
+  $("#reset").addEventListener("click", () => {
+    document.querySelectorAll('input[name="serie"]').forEach(c => c.checked = false);
+    document.querySelectorAll('input[name="energie"]').forEach(r => r.checked = false);
+    renderSeries(); updateConsoUnit();
+    $("#conso").value = ""; $("#billed").value = "";
+    $("#from").value = lo; $("#to").value = hi;
+    LAST = null; $("#out").hidden = true; $("#error").hidden = true;
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+  $("#copy").addEventListener("click", doCopy);
+  $("#csv").addEventListener("click", doCsv);
+  $("#png").addEventListener("click", doPng);
+  $("#print").addEventListener("click", () => window.print());
+  window.addEventListener("resize", () => { if(LAST) drawChart(); });
+})();
+
+function setLang(l){
+  LANG = l;
+  try{ localStorage.setItem("lang", l); }catch(e){}
+  applyLang();
+}
+</script>
+</body>
+</html>

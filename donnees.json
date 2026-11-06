@@ -1,0 +1,978 @@
+{
+ "version": 1,
+ "miseAJour": "2026-11-03",
+ "region": "Bruxelles",
+ "source": "CREG",
+ "references": {
+  "elec": "3 500 kWh/an",
+  "gaz": "23 260 kWh/an",
+  "mazout": "1 545 L"
+ },
+ "unites": {
+  "elec": "c€/kWh",
+  "gaz": "c€/kWh",
+  "mazout": "€ pour 1 545 L"
+ },
+ "mois": [
+  {
+   "mois": "2019-01",
+   "mazout": 1431.86,
+   "elec_comm": 27.26,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 6.24,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-02",
+   "mazout": 1400.76,
+   "elec_comm": 27.24,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 6.17,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-03",
+   "mazout": 1453.43,
+   "elec_comm": 27.21,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 6.15,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-04",
+   "mazout": 1533.38,
+   "elec_comm": 22.9,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 5.63,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-05",
+   "mazout": 1528.3,
+   "elec_comm": 22.92,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 5.54,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-06",
+   "mazout": 1396.11,
+   "elec_comm": 22.91,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 5.58,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-07",
+   "mazout": 1420.01,
+   "elec_comm": 21.91,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.39,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-08",
+   "mazout": 1448.99,
+   "elec_comm": 22.02,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.39,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-09",
+   "mazout": 1490.02,
+   "elec_comm": 22.01,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.39,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-10",
+   "mazout": 1465.91,
+   "elec_comm": 23.33,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.57,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-11",
+   "mazout": 1431.22,
+   "elec_comm": 23.35,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.57,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2019-12",
+   "mazout": 1414.3,
+   "elec_comm": 23.35,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.57,
+   "gaz_social": 3.25
+  },
+  {
+   "mois": "2020-01",
+   "mazout": 1477.96,
+   "elec_comm": 23.25,
+   "elec_social": 17.99,
+   "elec_jour": 18.589,
+   "elec_nuit": 13.976,
+   "gaz_comm": 4.41,
+   "gaz_social": 2.59
+  },
+  {
+   "mois": "2020-02",
+   "mazout": 1320.39,
+   "elec_comm": 23.23,
+   "elec_social": 19.34,
+   "elec_jour": 20.129,
+   "elec_nuit": 15.473,
+   "gaz_comm": 4.4,
+   "gaz_social": 2.59
+  },
+  {
+   "mois": "2020-03",
+   "mazout": 996.8,
+   "elec_comm": 23.26,
+   "elec_social": 19.34,
+   "elec_jour": 20.129,
+   "elec_nuit": 15.473,
+   "gaz_comm": 4.34,
+   "gaz_social": 2.59
+  },
+  {
+   "mois": "2020-04",
+   "mazout": 844.31,
+   "elec_comm": 20.26,
+   "elec_social": 19.34,
+   "elec_jour": 20.129,
+   "elec_nuit": 15.473,
+   "gaz_comm": 3.82,
+   "gaz_social": 2.59
+  },
+  {
+   "mois": "2020-05",
+   "mazout": 765.42,
+   "elec_comm": 19.41,
+   "elec_social": 19.34,
+   "elec_jour": 20.129,
+   "elec_nuit": 15.473,
+   "gaz_comm": 3.67,
+   "gaz_social": 2.59
+  },
+  {
+   "mois": "2020-06",
+   "mazout": 910.3,
+   "elec_comm": 19.46,
+   "elec_social": 19.34,
+   "elec_jour": 20.129,
+   "elec_nuit": 15.473,
+   "gaz_comm": 3.54,
+   "gaz_social": 2.59
+  },
+  {
+   "mois": "2020-07",
+   "mazout": 989.4,
+   "elec_comm": 19.96,
+   "elec_social": 16.15,
+   "elec_jour": 16.271,
+   "elec_nuit": 13.213,
+   "gaz_comm": 3.44,
+   "gaz_social": 1.62
+  },
+  {
+   "mois": "2020-08",
+   "mazout": 964.65,
+   "elec_comm": 20.2,
+   "elec_social": 16.15,
+   "elec_jour": 16.271,
+   "elec_nuit": 13.213,
+   "gaz_comm": 3.43,
+   "gaz_social": 1.62
+  },
+  {
+   "mois": "2020-09",
+   "mazout": 893.8,
+   "elec_comm": 20.52,
+   "elec_social": 16.15,
+   "elec_jour": 16.271,
+   "elec_nuit": 13.213,
+   "gaz_comm": 3.61,
+   "gaz_social": 1.62
+  },
+  {
+   "mois": "2020-10",
+   "mazout": 918.33,
+   "elec_comm": 22.28,
+   "elec_social": 16.56,
+   "elec_jour": 16.781,
+   "elec_nuit": 13.562,
+   "gaz_comm": 4.22,
+   "gaz_social": 1.85
+  },
+  {
+   "mois": "2020-11",
+   "mazout": 945.19,
+   "elec_comm": 22.01,
+   "elec_social": 16.56,
+   "elec_jour": 16.781,
+   "elec_nuit": 13.562,
+   "gaz_comm": 4.41,
+   "gaz_social": 1.85
+  },
+  {
+   "mois": "2020-12",
+   "mazout": 1018.58,
+   "elec_comm": 22.03,
+   "elec_social": 16.56,
+   "elec_jour": 16.781,
+   "elec_nuit": 13.562,
+   "gaz_comm": 4.4,
+   "gaz_social": 1.85
+  },
+  {
+   "mois": "2021-01",
+   "mazout": 1093.46,
+   "elec_comm": 23.09,
+   "elec_social": 18.22,
+   "elec_jour": 18.459,
+   "elec_nuit": 14.919,
+   "gaz_comm": 4.75,
+   "gaz_social": 2.11
+  },
+  {
+   "mois": "2021-02",
+   "mazout": 1164.94,
+   "elec_comm": 23.65,
+   "elec_social": 18.22,
+   "elec_jour": 18.459,
+   "elec_nuit": 14.919,
+   "gaz_comm": 5.06,
+   "gaz_social": 2.11
+  },
+  {
+   "mois": "2021-03",
+   "mazout": 1274.92,
+   "elec_comm": 23.15,
+   "elec_social": 18.22,
+   "elec_jour": 18.459,
+   "elec_nuit": 14.919,
+   "gaz_comm": 4.83,
+   "gaz_social": 2.11
+  },
+  {
+   "mois": "2021-04",
+   "mazout": 1206.82,
+   "elec_comm": 23.07,
+   "elec_social": 20.0,
+   "elec_jour": 20.306,
+   "elec_nuit": 16.412,
+   "gaz_comm": 4.9,
+   "gaz_social": 2.41
+  },
+  {
+   "mois": "2021-05",
+   "mazout": 1281.06,
+   "elec_comm": 23.64,
+   "elec_social": 20.0,
+   "elec_jour": 20.306,
+   "elec_nuit": 16.412,
+   "gaz_comm": 5.1,
+   "gaz_social": 2.41
+  },
+  {
+   "mois": "2021-06",
+   "mazout": 1277.88,
+   "elec_comm": 23.57,
+   "elec_social": 20.0,
+   "elec_jour": 20.306,
+   "elec_nuit": 16.412,
+   "gaz_comm": 5.42,
+   "gaz_social": 2.41
+  },
+  {
+   "mois": "2021-07",
+   "mazout": 1395.69,
+   "elec_comm": 26.17,
+   "elec_social": 21.23,
+   "elec_jour": 21.546,
+   "elec_nuit": 17.433,
+   "gaz_comm": 6.28,
+   "gaz_social": 2.47
+  },
+  {
+   "mois": "2021-08",
+   "mazout": 1394.0,
+   "elec_comm": 26.43,
+   "elec_social": 21.23,
+   "elec_jour": 21.546,
+   "elec_nuit": 17.433,
+   "gaz_comm": 6.79,
+   "gaz_social": 2.47
+  },
+  {
+   "mois": "2021-09",
+   "mazout": 1442.85,
+   "elec_comm": 26.6,
+   "elec_social": 21.23,
+   "elec_jour": 21.546,
+   "elec_nuit": 17.433,
+   "gaz_comm": 7.35,
+   "gaz_social": 2.47
+  },
+  {
+   "mois": "2021-10",
+   "mazout": 1652.45,
+   "elec_comm": 33.7,
+   "elec_social": 22.74,
+   "elec_jour": 23.128,
+   "elec_nuit": 18.699,
+   "gaz_comm": 10.57,
+   "gaz_social": 2.74
+  },
+  {
+   "mois": "2021-11",
+   "mazout": 1666.2,
+   "elec_comm": 35.85,
+   "elec_social": 22.74,
+   "elec_jour": 23.128,
+   "elec_nuit": 18.699,
+   "gaz_comm": 12.04,
+   "gaz_social": 2.74
+  },
+  {
+   "mois": "2021-12",
+   "mazout": 1532.53,
+   "elec_comm": 36.73,
+   "elec_social": 22.74,
+   "elec_jour": 23.128,
+   "elec_nuit": 18.699,
+   "gaz_comm": 11.83,
+   "gaz_social": 2.74
+  },
+  {
+   "mois": "2022-01",
+   "mazout": 1776.39,
+   "elec_comm": 47.82,
+   "elec_social": 24.24,
+   "elec_jour": 25.032,
+   "elec_nuit": 20.238,
+   "gaz_comm": 16.13,
+   "gaz_social": 2.96
+  },
+  {
+   "mois": "2022-02",
+   "mazout": 1891.44,
+   "elec_comm": 44.64,
+   "elec_social": 24.24,
+   "elec_jour": 25.032,
+   "elec_nuit": 20.238,
+   "gaz_comm": 14.13,
+   "gaz_social": 2.96
+  },
+  {
+   "mois": "2022-03",
+   "mazout": 2850.39,
+   "elec_comm": 37.3,
+   "elec_social": 21.23,
+   "elec_jour": 25.032,
+   "elec_nuit": 17.73,
+   "gaz_comm": 13.96,
+   "gaz_social": 2.96
+  },
+  {
+   "mois": "2022-04",
+   "mazout": 1889.54,
+   "elec_comm": 43.67,
+   "elec_social": 22.91,
+   "elec_jour": 23.657,
+   "elec_nuit": 19.128,
+   "gaz_comm": 16.15,
+   "gaz_social": 2.85
+  },
+  {
+   "mois": "2022-05",
+   "mazout": 1920.28,
+   "elec_comm": 38.56,
+   "elec_social": 22.91,
+   "elec_jour": 23.657,
+   "elec_nuit": 19.128,
+   "gaz_comm": 14.05,
+   "gaz_social": 2.85
+  },
+  {
+   "mois": "2022-06",
+   "mazout": 2227.89,
+   "elec_comm": 37.9,
+   "elec_social": 22.91,
+   "elec_jour": 23.657,
+   "elec_nuit": 19.128,
+   "gaz_comm": 13.33,
+   "gaz_social": 2.85
+  },
+  {
+   "mois": "2022-07",
+   "mazout": 2061.34,
+   "elec_comm": 42.65,
+   "elec_social": 24.61,
+   "elec_jour": 25.417,
+   "elec_nuit": 20.553,
+   "gaz_comm": 13.87,
+   "gaz_social": 3.09
+  },
+  {
+   "mois": "2022-08",
+   "mazout": 1947.78,
+   "elec_comm": 49.26,
+   "elec_social": 24.61,
+   "elec_jour": 25.417,
+   "elec_nuit": 20.553,
+   "gaz_comm": 16.36,
+   "gaz_social": 3.09
+  },
+  {
+   "mois": "2022-09",
+   "mazout": 1994.13,
+   "elec_comm": 58.33,
+   "elec_social": 24.61,
+   "elec_jour": 25.417,
+   "elec_nuit": 20.553,
+   "gaz_comm": 17.48,
+   "gaz_social": 3.09
+  },
+  {
+   "mois": "2022-10",
+   "mazout": 2076.48,
+   "elec_comm": 67.54,
+   "elec_social": 26.51,
+   "elec_jour": 27.379,
+   "elec_nuit": 22.138,
+   "gaz_comm": 20.89,
+   "gaz_social": 3.4
+  },
+  {
+   "mois": "2022-11",
+   "mazout": 2143.22,
+   "elec_comm": 54.46,
+   "elec_social": 26.51,
+   "elec_jour": 27.379,
+   "elec_nuit": 22.138,
+   "gaz_comm": 16.48,
+   "gaz_social": 3.4
+  },
+  {
+   "mois": "2022-12",
+   "mazout": 1734.73,
+   "elec_comm": 56.36,
+   "elec_social": 26.51,
+   "elec_jour": 27.379,
+   "elec_nuit": 22.138,
+   "gaz_comm": 18.64,
+   "gaz_social": 3.4
+  },
+  {
+   "mois": "2023-01",
+   "mazout": 1663.97,
+   "elec_comm": 54.49,
+   "elec_social": 28.58,
+   "elec_jour": 29.515,
+   "elec_nuit": 23.865,
+   "gaz_comm": 16.1,
+   "gaz_social": 3.73
+  },
+  {
+   "mois": "2023-02",
+   "mazout": 1516.11,
+   "elec_comm": 45.55,
+   "elec_social": 28.58,
+   "elec_jour": 29.515,
+   "elec_nuit": 23.865,
+   "gaz_comm": 12.78,
+   "gaz_social": 3.73
+  },
+  {
+   "mois": "2023-03",
+   "mazout": 1501.28,
+   "elec_comm": 47.07,
+   "elec_social": 28.58,
+   "elec_jour": 29.515,
+   "elec_nuit": 23.865,
+   "gaz_comm": 12.59,
+   "gaz_social": 3.73
+  },
+  {
+   "mois": "2023-04",
+   "mazout": 1433.3,
+   "elec_comm": 36.57,
+   "elec_social": 30.782,
+   "elec_jour": 31.79,
+   "elec_nuit": 25.704,
+   "gaz_comm": 8.88,
+   "gaz_social": 4.084
+  },
+  {
+   "mois": "2023-05",
+   "mazout": 1315.26,
+   "elec_comm": 35.64,
+   "elec_social": 30.782,
+   "elec_jour": 31.79,
+   "elec_nuit": 25.704,
+   "gaz_comm": 8.55,
+   "gaz_social": 4.084
+  },
+  {
+   "mois": "2023-06",
+   "mazout": 1350.18,
+   "elec_comm": 33.02,
+   "elec_social": 30.782,
+   "elec_jour": 31.79,
+   "elec_nuit": 25.704,
+   "gaz_comm": 7.37,
+   "gaz_social": 4.084
+  },
+  {
+   "mois": "2023-07",
+   "mazout": 1369.8,
+   "elec_comm": 34.75,
+   "elec_social": 22.238,
+   "elec_jour": 22.238,
+   "elec_nuit": 22.238,
+   "gaz_comm": 7.74,
+   "gaz_social": 4.47
+  },
+  {
+   "mois": "2023-08",
+   "mazout": 1629.98,
+   "elec_comm": 32.99,
+   "elec_social": 22.238,
+   "elec_jour": 22.238,
+   "elec_nuit": 22.238,
+   "gaz_comm": 7.48,
+   "gaz_social": 4.47
+  },
+  {
+   "mois": "2023-09",
+   "mazout": 1739.05,
+   "elec_comm": 34.75,
+   "elec_social": 22.238,
+   "elec_jour": 22.238,
+   "elec_nuit": 22.238,
+   "gaz_comm": 7.95,
+   "gaz_social": 4.47
+  },
+  {
+   "mois": "2023-10",
+   "mazout": 1723.14,
+   "elec_comm": 34.84,
+   "elec_social": 21.568,
+   "elec_jour": 21.878,
+   "elec_nuit": 21.248,
+   "gaz_comm": 8.65,
+   "gaz_social": 4.9
+  },
+  {
+   "mois": "2023-11",
+   "mazout": 1610.53,
+   "elec_comm": 35.29,
+   "elec_social": 21.568,
+   "elec_jour": 21.878,
+   "elec_nuit": 21.248,
+   "gaz_comm": 9.47,
+   "gaz_social": 4.9
+  },
+  {
+   "mois": "2023-12",
+   "mazout": 1504.21,
+   "elec_comm": 34.94,
+   "elec_social": 21.568,
+   "elec_jour": 21.878,
+   "elec_nuit": 21.248,
+   "gaz_comm": 9.27,
+   "gaz_social": 4.9
+  },
+  {
+   "mois": "2024-01",
+   "mazout": 1728.15,
+   "elec_comm": 36.85,
+   "elec_social": 23.441,
+   "elec_jour": 23.96,
+   "elec_nuit": 23.301,
+   "gaz_comm": 10.17,
+   "gaz_social": 5.371
+  },
+  {
+   "mois": "2024-02",
+   "mazout": 1441.86,
+   "elec_comm": 35.53,
+   "elec_social": 23.441,
+   "elec_jour": 23.96,
+   "elec_nuit": 23.301,
+   "gaz_comm": 8.48,
+   "gaz_social": 5.371
+  },
+  {
+   "mois": "2024-03",
+   "mazout": 1377.21,
+   "elec_comm": 33.91,
+   "elec_social": 23.441,
+   "elec_jour": 23.96,
+   "elec_nuit": 23.301,
+   "gaz_comm": 7.94,
+   "gaz_social": 5.371
+  },
+  {
+   "mois": "2024-04",
+   "mazout": 1541.45,
+   "elec_comm": 32.88,
+   "elec_social": 18.183,
+   "elec_jour": 18.563,
+   "elec_nuit": 17.893,
+   "gaz_comm": 7.84,
+   "gaz_social": 4.331
+  },
+  {
+   "mois": "2024-05",
+   "mazout": 1518.3,
+   "elec_comm": 32.16,
+   "elec_social": 18.183,
+   "elec_jour": 18.563,
+   "elec_nuit": 17.893,
+   "gaz_comm": 8.26,
+   "gaz_social": 4.331
+  },
+  {
+   "mois": "2024-06",
+   "mazout": 1527.39,
+   "elec_comm": 32.98,
+   "elec_social": 18.183,
+   "elec_jour": 18.563,
+   "elec_nuit": 17.893,
+   "gaz_comm": 8.62,
+   "gaz_social": 4.331
+  },
+  {
+   "mois": "2024-07",
+   "mazout": 1445.66,
+   "elec_comm": 33.53,
+   "elec_social": 17.203,
+   "elec_jour": 17.573,
+   "elec_nuit": 16.914,
+   "gaz_comm": 8.99,
+   "gaz_social": 4.457
+  },
+  {
+   "mois": "2024-08",
+   "mazout": 1363.15,
+   "elec_comm": 34.12,
+   "elec_social": 17.203,
+   "elec_jour": 17.573,
+   "elec_nuit": 16.914,
+   "gaz_comm": 8.63,
+   "gaz_social": 4.457
+  },
+  {
+   "mois": "2024-09",
+   "mazout": 1274.47,
+   "elec_comm": 35.68,
+   "elec_social": 17.203,
+   "elec_jour": 17.573,
+   "elec_nuit": 16.914,
+   "gaz_comm": 9.3,
+   "gaz_social": 4.457
+  },
+  {
+   "mois": "2024-10",
+   "mazout": 1317.11,
+   "elec_comm": 34.19,
+   "elec_social": 18.923,
+   "elec_jour": 19.33,
+   "elec_nuit": 18.605,
+   "gaz_comm": 8.83,
+   "gaz_social": 5.126
+  },
+  {
+   "mois": "2024-11",
+   "mazout": 1347.39,
+   "elec_comm": 35.23,
+   "elec_social": 18.923,
+   "elec_jour": 19.33,
+   "elec_nuit": 18.605,
+   "gaz_comm": 9.39,
+   "gaz_social": 5.126
+  },
+  {
+   "mois": "2024-12",
+   "mazout": 1351.72,
+   "elec_comm": 37.97,
+   "elec_social": 18.923,
+   "elec_jour": 19.33,
+   "elec_nuit": 18.605,
+   "gaz_comm": 9.79,
+   "gaz_social": 5.126
+  },
+  {
+   "mois": "2025-01",
+   "mazout": 1432.22,
+   "elec_comm": 39.91,
+   "elec_social": 20.815,
+   "elec_jour": 21.263,
+   "elec_nuit": 20.466,
+   "gaz_comm": 9.89,
+   "gaz_social": 5.894
+  },
+  {
+   "mois": "2025-02",
+   "mazout": 1425.26,
+   "elec_comm": 40.59,
+   "elec_social": 20.815,
+   "elec_jour": 21.263,
+   "elec_nuit": 20.466,
+   "gaz_comm": 10.1,
+   "gaz_social": 5.894
+  },
+  {
+   "mois": "2025-03",
+   "mazout": 1322.37,
+   "elec_comm": 41.3,
+   "elec_social": 20.815,
+   "elec_jour": 21.263,
+   "elec_nuit": 20.466,
+   "gaz_comm": 10.29,
+   "gaz_social": 5.894
+  },
+  {
+   "mois": "2025-04",
+   "mazout": 1227.66,
+   "elec_comm": 37.86,
+   "elec_social": 22.538,
+   "elec_jour": 23.019,
+   "elec_nuit": 22.163,
+   "gaz_comm": 9.32,
+   "gaz_social": 6.19
+  },
+  {
+   "mois": "2025-05",
+   "mazout": 1174.2,
+   "elec_comm": 35.7,
+   "elec_social": 22.538,
+   "elec_jour": 23.019,
+   "elec_nuit": 22.163,
+   "gaz_comm": 8.52,
+   "gaz_social": 6.19
+  },
+  {
+   "mois": "2025-06",
+   "mazout": 1276.48,
+   "elec_comm": 35.15,
+   "elec_social": 22.538,
+   "elec_jour": 23.019,
+   "elec_nuit": 22.163,
+   "gaz_comm": 8.58,
+   "gaz_social": 6.19
+  },
+  {
+   "mois": "2025-07",
+   "mazout": 1330.55,
+   "elec_comm": 35.9,
+   "elec_social": 23.844,
+   "elec_jour": 24.355,
+   "elec_nuit": 23.444,
+   "gaz_comm": 8.66,
+   "gaz_social": 5.338
+  },
+  {
+   "mois": "2025-08",
+   "mazout": 1267.52,
+   "elec_comm": 36.46,
+   "elec_social": 23.844,
+   "elec_jour": 24.355,
+   "elec_nuit": 23.444,
+   "gaz_comm": 8.45,
+   "gaz_social": 5.338
+  },
+  {
+   "mois": "2025-09",
+   "mazout": 1276.02,
+   "elec_comm": 36.32,
+   "elec_social": 23.844,
+   "elec_jour": 24.355,
+   "elec_nuit": 23.444,
+   "gaz_comm": 8.25,
+   "gaz_social": 5.338
+  },
+  {
+   "mois": "2025-10",
+   "mazout": 1238.94,
+   "elec_comm": 36.1,
+   "elec_social": 22.773,
+   "elec_jour": 23.159,
+   "elec_nuit": 20.759,
+   "gaz_comm": 8.25,
+   "gaz_social": 4.745
+  },
+  {
+   "mois": "2025-11",
+   "mazout": 1371.65,
+   "elec_comm": 37.12,
+   "elec_social": 22.773,
+   "elec_jour": 23.159,
+   "elec_nuit": 20.759,
+   "gaz_comm": 8.15,
+   "gaz_social": 4.745
+  },
+  {
+   "mois": "2025-12",
+   "mazout": 1108.54,
+   "elec_comm": 37.64,
+   "elec_social": 22.773,
+   "elec_jour": 23.159,
+   "elec_nuit": 20.759,
+   "gaz_comm": 7.97,
+   "gaz_social": 4.745
+  },
+  {
+   "mois": "2026-01",
+   "mazout": 1001.16,
+   "elec_comm": 38.18,
+   "elec_social": 24.795,
+   "elec_jour": 24.795,
+   "elec_nuit": 22.836,
+   "gaz_comm": 7.84,
+   "gaz_social": 4.514
+  },
+  {
+   "mois": "2026-02",
+   "mazout": 1268.6,
+   "elec_comm": 40.47,
+   "elec_social": 24.795,
+   "elec_jour": 24.795,
+   "elec_nuit": 22.836,
+   "gaz_comm": 8.41,
+   "gaz_social": 4.514
+  },
+  {
+   "mois": "2026-03",
+   "mazout": 1815.53,
+   "elec_comm": 37.82,
+   "elec_social": 24.795,
+   "elec_jour": 24.795,
+   "elec_nuit": 22.836,
+   "gaz_comm": 8.31,
+   "gaz_social": 4.514
+  },
+  {
+   "mois": "2026-04",
+   "mazout": 2117.42,
+   "elec_comm": 39.82,
+   "elec_social": 23.767,
+   "elec_jour": 25.468,
+   "elec_nuit": 24.257,
+   "gaz_comm": 10.89,
+   "gaz_social": 4.746
+  },
+  {
+   "mois": "2026-05",
+   "mazout": 1964.62,
+   "elec_comm": 37.75,
+   "elec_social": 23.767,
+   "elec_jour": 25.468,
+   "elec_nuit": 24.257,
+   "gaz_comm": 9.85,
+   "gaz_social": 4.746
+  },
+  {
+   "mois": "2026-06",
+   "mazout": 2920.05,
+   "elec_comm": 39.04,
+   "elec_social": 23.767,
+   "elec_jour": 25.468,
+   "elec_nuit": 24.257,
+   "gaz_comm": 9.93,
+   "gaz_social": 4.746
+  },
+  {
+   "mois": "2026-07",
+   "mazout": 1867.13,
+   "elec_comm": 40.4,
+   "elec_social": 24.927,
+   "elec_jour": 26.797,
+   "elec_nuit": 23.328,
+   "gaz_comm": 9.65,
+   "gaz_social": 5.458
+  },
+  {
+   "mois": "2026-08",
+   "mazout": null,
+   "elec_comm": null,
+   "elec_social": 24.927,
+   "elec_jour": 26.797,
+   "elec_nuit": 23.328,
+   "gaz_comm": null,
+   "gaz_social": 5.458
+  },
+  {
+   "mois": "2026-09",
+   "mazout": null,
+   "elec_comm": null,
+   "elec_social": 24.927,
+   "elec_jour": 26.797,
+   "elec_nuit": 23.328,
+   "gaz_comm": null,
+   "gaz_social": 5.458
+  },
+  {
+   "mois": "2026-10",
+   "mazout": null,
+   "elec_comm": null,
+   "elec_social": null,
+   "elec_jour": null,
+   "elec_nuit": null,
+   "gaz_comm": null,
+   "gaz_social": null
+  },
+  {
+   "mois": "2026-11",
+   "mazout": null,
+   "elec_comm": null,
+   "elec_social": null,
+   "elec_jour": null,
+   "elec_nuit": null,
+   "gaz_comm": null,
+   "gaz_social": null
+  },
+  {
+   "mois": "2026-12",
+   "mazout": null,
+   "elec_comm": null,
+   "elec_social": null,
+   "elec_jour": null,
+   "elec_nuit": null,
+   "gaz_comm": null,
+   "gaz_social": null
+  }
+ ]
+}
